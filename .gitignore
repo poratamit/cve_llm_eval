@@ -5,3 +5,6 @@ __pycache__/
 venv/
 results/raw/
 *.Zone.Identifier
+
+# IntelliJ IDEA IDE config (per-developer, not shared)
+.idea/
