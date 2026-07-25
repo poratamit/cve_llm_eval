@@ -104,26 +104,60 @@ Return ONLY a JSON object (no fences):
   "reason": one short sentence}}"""
 
 
+def _repair_json(cleaned: str) -> str:
+    """Close an object the judge left unterminated (the pro-preview model
+    sometimes drops the trailing brace even with finish_reason=STOP)."""
+    s = cleaned
+    # If a string literal is left open (odd number of unescaped quotes), close it.
+    if s.count('"') % 2 == 1:
+        s += '"'
+    # Balance braces / brackets.
+    s += "]" * max(0, s.count("[") - s.count("]"))
+    s += "}" * max(0, s.count("{") - s.count("}"))
+    return s
+
+
 def _parse(text: str) -> dict:
     cleaned = _FENCE.sub("", text or "").strip()
     if not cleaned.startswith("{"):
-        m = re.search(r"\{.*\}", cleaned, re.DOTALL)
+        m = re.search(r"\{.*", cleaned, re.DOTALL)  # from first brace to end
         cleaned = m.group(0) if m else "{}"
-    try:
-        return json.loads(cleaned)
-    except (json.JSONDecodeError, ValueError):
-        return {"label": "unsure", "hijacked_cve": None,
-                "retrieval_diagnosis": "not_applicable",
-                "reason": "judge output unparseable"}
+    for candidate in (cleaned, _repair_json(cleaned)):
+        try:
+            return json.loads(candidate)
+        except (json.JSONDecodeError, ValueError):
+            continue
+    return {"label": "unsure", "hijacked_cve": None,
+            "retrieval_diagnosis": "not_applicable",
+            "reason": "judge output unparseable"}
+
+
+def _judge_schema(exists: bool) -> types.Schema:
+    """API-enforced object shape -> the model cannot return a partial/unterminated
+    JSON. Safe here because the judge uses no grounding tool (no schema conflict)."""
+    labels = REAL_LABELS if exists else FAKE_LABELS
+    return types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "label": types.Schema(type=types.Type.STRING, enum=labels),
+            "hijacked_cve": types.Schema(type=types.Type.STRING, nullable=True),
+            "retrieval_diagnosis": types.Schema(type=types.Type.STRING, enum=DIAGNOSES),
+            "reason": types.Schema(type=types.Type.STRING),
+        },
+        required=["label", "retrieval_diagnosis", "reason"],
+    )
 
 
 def judge_record(record: dict, gt: dict, retries: int = 3) -> dict:
     prompt = build_prompt(record, gt)
+    schema = _judge_schema(bool(gt.get("exists")))
+    last = "no attempt"
     for attempt in range(retries):
         try:
             resp = client().models.generate_content(
                 model=C.JUDGE_MODEL, contents=prompt,
-                config=types.GenerateContentConfig(response_mime_type="application/json"))
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json", response_schema=schema))
             return _parse(getattr(resp, "text", "") or "")
         except Exception as e:  # noqa: BLE001
             last = str(e)
