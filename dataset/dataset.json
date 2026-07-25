@@ -1,0 +1,2989 @@
+{
+  "built_at": "2026-07-18T20:44:10.999105+00:00",
+  "nvd_api_key_used": false,
+  "counts": {
+    "real_known": 30,
+    "real_recent": 30,
+    "fake_random": 30,
+    "fake_near_miss": 30
+  },
+  "items": [
+    {
+      "id": "CVE-2021-44228",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security releases 2.12.2, 2.12.3, and 2.3.1) JNDI features used in configuration, log messages, and parameters do not protect against attacker controlled LDAP and other JNDI related endpoints. An attacker who can control log messages or log message parameters can execute arbitrary code loaded from LDAP servers when message lookup substitution is enabled. From log4j 2.15.0, this behavior has been disabled by default. From version 2.16.0 (along with 2.12.2, 2.12.3, and 2.3.1), this functionality has been completely removed. Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects.",
+        "published": "2021-12-10T10:15:09.143",
+        "cvss_scores": [
+          9.3,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "6bk1602-0aa12-0tp0",
+          "6bk1602-0aa12-0tp0_firmware",
+          "6bk1602-0aa22-0tp0",
+          "6bk1602-0aa22-0tp0_firmware",
+          "6bk1602-0aa32-0tp0",
+          "6bk1602-0aa32-0tp0_firmware",
+          "6bk1602-0aa42-0tp0",
+          "6bk1602-0aa42-0tp0_firmware",
+          "6bk1602-0aa52-0tp0",
+          "6bk1602-0aa52-0tp0_firmware",
+          "active_iq_unified_manager",
+          "advanced_malware_protection_virtual_private_cloud_appliance",
+          "automated_subsea_tuning",
+          "broadworks",
+          "brocade_san_navigator",
+          "business_process_automation",
+          "capital",
+          "cloud_connect",
+          "cloud_insights",
+          "cloud_manager",
+          "cloud_secure_agent",
+          "cloudcenter",
+          "cloudcenter_cost_optimizer",
+          "cloudcenter_suite",
+          "cloudcenter_suite_admin",
+          "cloudcenter_workload_manager",
+          "common_services_platform_collector",
+          "comos",
+          "computer_vision_annotation_tool",
+          "connected_mobile_experiences",
+          "contact_center_domain_manager",
+          "contact_center_management_portal",
+          "crosswork_data_gateway",
+          "crosswork_network_automation",
+          "crosswork_network_controller",
+          "crosswork_optimization_engine",
+          "crosswork_platform_infrastructure",
+          "crosswork_zero_touch_provisioning",
+          "customer_experience_cloud_agent",
+          "cx_cloud_agent",
+          "cyber_vision",
+          "cyber_vision_sensor_management_extension",
+          "data_center_network_manager",
+          "datacenter_manager",
+          "debian_linux",
+          "desigo_cc_advanced_reports",
+          "desigo_cc_info_center",
+          "dna_center",
+          "dna_spaces",
+          "dna_spaces\\",
+          "dna_spaces_connector",
+          "e-car_operation_center",
+          "email_security",
+          "emergency_responder",
+          "energy_engage",
+          "energyip",
+          "energyip_prepay",
+          "enterprise_chat_and_email",
+          "evolved_programmable_network_manager",
+          "fedora",
+          "finesse",
+          "firepower_1010",
+          "firepower_1120",
+          "firepower_1140",
+          "firepower_1150",
+          "firepower_2110",
+          "firepower_2120",
+          "firepower_2130",
+          "firepower_2140",
+          "firepower_4110",
+          "firepower_4112",
+          "firepower_4115",
+          "firepower_4120",
+          "firepower_4125",
+          "firepower_4140",
+          "firepower_4145",
+          "firepower_4150",
+          "firepower_9300",
+          "firepower_threat_defense",
+          "fog_director",
+          "fxos",
+          "genomics_kernel_library",
+          "gma-manager",
+          "head-end_system_universal_device_integration_system",
+          "identity_services_engine",
+          "industrial_edge_management",
+          "industrial_edge_management_hub",
+          "integrated_management_controller_supervisor",
+          "intersight_virtual_appliance",
+          "iot_operations_dashboard",
+          "log4j",
+          "logo\\!_soft_comfort",
+          "mendix",
+          "mindsphere",
+          "mobility_services_engine",
+          "navigator",
+          "network_assurance_engine",
+          "network_dashboard_fabric_controller",
+          "network_insights_for_data_center",
+          "network_services_orchestrator",
+          "nexus_dashboard",
+          "nexus_insights",
+          "nx",
+          "oncommand_insight",
+          "oneapi_sample_browser",
+          "ontap_tools",
+          "opcenter_intelligence",
+          "operation_scheduler",
+          "optical_network_controller",
+          "packaged_contact_center_enterprise",
+          "paging_server",
+          "prime_service_catalog",
+          "rhythmyx",
+          "sd-wan_vmanage",
+          "secure_device_onboard",
+          "sentron_powermanager",
+          "siguard_dsa",
+          "sipass_integrated",
+          "siveillance_command",
+          "siveillance_control_pro",
+          "siveillance_identity",
+          "siveillance_vantage",
+          "siveillance_viewpoint",
+          "smart_phy",
+          "snapcenter",
+          "snow_commander",
+          "solid_edge_cam_pro",
+          "solid_edge_harness_design",
+          "solidfire_\\&_hci_storage_node",
+          "solidfire_enterprise_sds",
+          "spectrum_power_4",
+          "spectrum_power_7",
+          "sppa-t3000_ses3000",
+          "sppa-t3000_ses3000_firmware",
+          "synchro",
+          "synchro_4d",
+          "system_studio",
+          "teamcenter",
+          "ucs_central",
+          "ucs_central_software",
+          "ucs_director",
+          "unified_communications_manager",
+          "unified_communications_manager_im_\\&_presence_service",
+          "unified_communications_manager_im_and_presence_service",
+          "unified_computing_system",
+          "unified_contact_center_enterprise",
+          "unified_contact_center_express",
+          "unified_contact_center_management_portal",
+          "unified_customer_voice_portal",
+          "unified_intelligence_center",
+          "unified_sip_proxy",
+          "unified_workforce_optimization",
+          "unity_connection",
+          "vesys",
+          "video_surveillance_manager",
+          "video_surveillance_operations_manager",
+          "virtual_topology_system",
+          "virtualized_infrastructure_manager",
+          "virtualized_voice_browser",
+          "vm_access_proxy",
+          "wan_automation_engine",
+          "webex_meetings_server",
+          "workload_optimization_manager",
+          "xcode",
+          "xpedition_enterprise",
+          "xpedition_package_integrator"
+        ],
+        "vendors": [
+          "apache",
+          "apple",
+          "bentley",
+          "cisco",
+          "debian",
+          "fedoraproject",
+          "intel",
+          "netapp",
+          "percussion",
+          "siemens",
+          "snowsoftware",
+          "sonicwall"
+        ],
+        "reference_count": 103
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-45046",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "It was found that the fix to address CVE-2021-44228 in Apache Log4j 2.15.0 was incomplete in certain non-default configurations. This could allows attackers with control over Thread Context Map (MDC) input data when the logging configuration uses a non-default Pattern Layout with either a Context Lookup (for example, $${ctx:loginId}) or a Thread Context Map pattern (%X, %mdc, or %MDC) to craft malicious input data using a JNDI Lookup pattern resulting in an information leak and remote code execution in some environments and local code execution in all environments. Log4j 2.16.0 (Java 8) and 2.12.2 (Java 7) fix this issue by removing support for message lookup patterns and disabling JNDI functionality by default.",
+        "published": "2021-12-14T19:15:07.733",
+        "cvss_scores": [
+          5.1,
+          9.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "MEDIUM"
+        ],
+        "products": [
+          "6bk1602-0aa12-0tp0",
+          "6bk1602-0aa12-0tp0_firmware",
+          "6bk1602-0aa22-0tp0",
+          "6bk1602-0aa22-0tp0_firmware",
+          "6bk1602-0aa32-0tp0",
+          "6bk1602-0aa32-0tp0_firmware",
+          "6bk1602-0aa42-0tp0",
+          "6bk1602-0aa42-0tp0_firmware",
+          "6bk1602-0aa52-0tp0",
+          "6bk1602-0aa52-0tp0_firmware",
+          "audio_development_kit",
+          "captial",
+          "comos",
+          "computer_vision_annotation_tool",
+          "datacenter_manager",
+          "debian_linux",
+          "desigo_cc_advanced_reports",
+          "desigo_cc_info_center",
+          "e-car_operation_center",
+          "email_security",
+          "energy_engage",
+          "energyip",
+          "energyip_prepay",
+          "fedora",
+          "genomics_kernel_library",
+          "gma-manager",
+          "head-end_system_universal_device_integration_system",
+          "industrial_edge_management",
+          "industrial_edge_management_hub",
+          "log4j",
+          "logo\\!_soft_comfort",
+          "mendix",
+          "mindsphere",
+          "navigator",
+          "nx",
+          "oneapi",
+          "opcenter_intelligence",
+          "operation_scheduler",
+          "secure_device_onboard",
+          "sensor_solution_firmware_development_kit",
+          "sentron_powermanager",
+          "siguard_dsa",
+          "sipass_integrated",
+          "siveillance_command",
+          "siveillance_control_pro",
+          "siveillance_identity",
+          "siveillance_vantage",
+          "siveillance_viewpoint",
+          "solid_edge_cam_pro",
+          "solid_edge_harness_design",
+          "spectrum_power_4",
+          "spectrum_power_7",
+          "sppa-t3000_ses3000",
+          "sppa-t3000_ses3000_firmware",
+          "system_debugger",
+          "system_studio",
+          "teamcenter",
+          "tracealertserverplus",
+          "vesys",
+          "xpedition_enterprise",
+          "xpedition_package_integrator"
+        ],
+        "vendors": [
+          "apache",
+          "cvat",
+          "debian",
+          "fedoraproject",
+          "intel",
+          "siemens",
+          "sonicwall"
+        ],
+        "reference_count": 43
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2019-0708",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A remote code execution vulnerability exists in Remote Desktop Services formerly known as Terminal Services when an unauthenticated attacker connects to the target system using RDP and sends specially crafted requests, aka 'Remote Desktop Services Remote Code Execution Vulnerability'.",
+        "published": "2019-05-16T19:29:00.427",
+        "cvss_scores": [
+          9.8,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "agile_controller-campus",
+          "agile_controller-campus_firmware",
+          "aptio",
+          "aptio_firmware",
+          "atellica_solution",
+          "atellica_solution_firmware",
+          "axiom_multix_m",
+          "axiom_multix_m_firmware",
+          "axiom_vertix_md_trauma",
+          "axiom_vertix_md_trauma_firmware",
+          "axiom_vertix_solitaire_m",
+          "axiom_vertix_solitaire_m_firmware",
+          "bh620_v2",
+          "bh620_v2_firmware",
+          "bh621_v2",
+          "bh621_v2_firmware",
+          "bh622_v2",
+          "bh622_v2_firmware",
+          "bh640_v2",
+          "bh640_v2_firmware",
+          "centralink",
+          "centralink_firmware",
+          "ch121",
+          "ch121_firmware",
+          "ch140",
+          "ch140_firmware",
+          "ch220",
+          "ch220_firmware",
+          "ch221",
+          "ch221_firmware",
+          "ch222",
+          "ch222_firmware",
+          "ch240",
+          "ch240_firmware",
+          "ch242",
+          "ch242_firmware",
+          "ch242_v3",
+          "ch242_v3_firmware",
+          "e6000",
+          "e6000_chassis",
+          "e6000_chassis_firmware",
+          "e6000_firmware",
+          "elog",
+          "elog_firmware",
+          "espace_ecs",
+          "espace_ecs_firmware",
+          "gtsoftx3000",
+          "gtsoftx3000_firmware",
+          "lantis",
+          "lantis_firmware",
+          "mobilett_xp_digital",
+          "mobilett_xp_digital_firmware",
+          "multix_pro",
+          "multix_pro_acss",
+          "multix_pro_acss_firmware",
+          "multix_pro_acss_p",
+          "multix_pro_acss_p_firmware",
+          "multix_pro_firmware",
+          "multix_pro_navy",
+          "multix_pro_navy_firmware",
+          "multix_pro_p",
+          "multix_pro_p_firmware",
+          "multix_swing",
+          "multix_swing_firmware",
+          "multix_top",
+          "multix_top_acss",
+          "multix_top_acss_firmware",
+          "multix_top_acss_p",
+          "multix_top_acss_p_firmware",
+          "multix_top_firmware",
+          "multix_top_p",
+          "multix_top_p_firmware",
+          "oceanstor_18500",
+          "oceanstor_18500_firmware",
+          "oceanstor_18800",
+          "oceanstor_18800_firmware",
+          "oceanstor_18800f",
+          "oceanstor_18800f_firmware",
+          "oceanstor_hvs85t",
+          "oceanstor_hvs85t_firmware",
+          "oceanstor_hvs88t",
+          "oceanstor_hvs88t_firmware",
+          "rapidpoint_500",
+          "rapidpoint_500_firmware",
+          "rh1288_v2",
+          "rh1288_v2_firmware",
+          "rh1288a_v2",
+          "rh1288a_v2_firmware",
+          "rh2265_v2",
+          "rh2265_v2_firmware",
+          "rh2268_v2",
+          "rh2268_v2_firmware",
+          "rh2285_v2",
+          "rh2285_v2_firmware",
+          "rh2285h_v2",
+          "rh2285h_v2_firmware",
+          "rh2288_v2",
+          "rh2288_v2_firmware",
+          "rh2288a_v2",
+          "rh2288a_v2_firmware",
+          "rh2288e_v2",
+          "rh2288e_v2_firmware",
+          "rh2288h_v2",
+          "rh2288h_v2_firmware",
+          "rh2485_v2",
+          "rh2485_v2_firmware",
+          "rh5885_v2",
+          "rh5885_v2_firmware",
+          "rh5885_v3",
+          "rh5885_v3_firmware",
+          "seco_vsm",
+          "seco_vsm_firmware",
+          "smc2.0",
+          "smc2.0_firmware",
+          "streamlab",
+          "streamlab_firmware",
+          "syngo_lab_process_manager",
+          "uma",
+          "uma_firmware",
+          "vertix_solitaire",
+          "vertix_solitaire_firmware",
+          "viva_e",
+          "viva_e_firmware",
+          "viva_twin",
+          "viva_twin_firmware",
+          "windows_7",
+          "windows_server_2008",
+          "x6000",
+          "x6000_firmware",
+          "x8000",
+          "x8000_firmware"
+        ],
+        "vendors": [
+          "huawei",
+          "microsoft",
+          "siemens"
+        ],
+        "reference_count": 29
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2020-1472",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "An elevation of privilege vulnerability exists when an attacker establishes a vulnerable Netlogon secure channel connection to a domain controller, using the Netlogon Remote Protocol (MS-NRPC). An attacker who successfully exploited the vulnerability could run a specially crafted application on a device on the network.\nTo exploit the vulnerability, an unauthenticated attacker would be required to use MS-NRPC to connect to a domain controller to obtain domain administrator access.\nMicrosoft is addressing the vulnerability in a phased two-part rollout. These updates address the vulnerability by modifying how Netlogon handles the usage of Netlogon secure channels.\nFor guidelines on how to manage the changes required for this vulnerability and more information on the phased rollout, see  How to manage the changes in Netlogon secure channel connections associated with CVE-2020-1472 (updated September 28, 2020).\nWhen the second phase of Windows updates become available in Q1 2021, customers will be notified via a revision to this security vulnerability. If you wish to be notified when these updates are released, we recommend that you register for the security notifications mailer to be alerted of content changes to this advisory. See Microsoft Technical Security Notifications.",
+        "published": "2020-08-17T19:15:15.117",
+        "cvss_scores": [
+          5.5,
+          9.3,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH",
+          "MEDIUM"
+        ],
+        "products": [
+          "debian_linux",
+          "directory_server",
+          "fedora",
+          "leap",
+          "samba",
+          "ubuntu_linux",
+          "windows_server_1903",
+          "windows_server_1909",
+          "windows_server_2004",
+          "windows_server_2008",
+          "windows_server_2012",
+          "windows_server_2016",
+          "windows_server_2019",
+          "windows_server_20h2",
+          "zfs_storage_appliance_kit"
+        ],
+        "vendors": [
+          "canonical",
+          "debian",
+          "fedoraproject",
+          "microsoft",
+          "opensuse",
+          "oracle",
+          "samba",
+          "synology"
+        ],
+        "reference_count": 35
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-34527",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "<p>A remote code execution vulnerability exists when the Windows Print Spooler service improperly performs privileged file operations. An attacker who successfully exploited this vulnerability could run arbitrary code with SYSTEM privileges. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights.</p>\n<p>UPDATE July 7, 2021: The security update for Windows Server 2012, Windows Server 2016 and Windows 10, Version 1607 have been released. Please see the Security Updates table for the applicable update for your system. We recommend that you install these updates immediately. If you are unable to install these updates, see the FAQ and Workaround sections in this CVE for information on how to help protect your system from this vulnerability.</p>\n<p>In addition to installing the updates, in order to secure your system, you must confirm that the following registry settings are set to 0 (zero) or are not defined (<strong>Note</strong>: These registry keys do not exist by default, and therefore are already at the secure setting.), also that your Group Policy setting are correct (see FAQ):</p>\n<ul>\n<li>HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Printers\\PointAndPrint</li>\n<li>NoWarningNoElevationOnInstall = 0 (DWORD) or not defined (default setting)</li>\n<li>UpdatePromptSettings = 0 (DWORD) or not defined (default setting)</li>\n</ul>\n<p><strong>Having NoWarningNoElevationOnInstall set to 1 makes your system vulnerable by design.</strong></p>\n<p>UPDATE July 6, 2021: Microsoft has completed the investigation and has released security updates to address this vulnerability. Please see the Security Updates table for the applicable update for your system. We recommend that you install these updates immediately. If you are unable to install these updates, see the FAQ and Workaround sections in this CVE for information on how to help protect your system from this vulnerability. See also <a href=\"https://support.microsoft.com/topic/31b91c02-05bc-4ada-a7ea-183b129578a7\">KB5005010: Restricting installation of new printer drivers after applying the July 6, 2021 updates</a>.</p>\n<p>Note that the security updates released on and after July 6, 2021 contain protections for CVE-2021-1675 and the additional remote code execution exploit in the Windows Print Spooler service known as \u201cPrintNightmare\u201d, documented in CVE-2021-34527.</p>\n",
+        "published": "2021-07-02T22:15:08.757",
+        "cvss_scores": [
+          8.8,
+          9.0
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "windows_10_1507",
+          "windows_10_1607",
+          "windows_10_1809",
+          "windows_10_20h2",
+          "windows_10_21h2",
+          "windows_10_22h2",
+          "windows_11_21h2",
+          "windows_11_22h2",
+          "windows_7",
+          "windows_8.1",
+          "windows_rt_8.1",
+          "windows_server_2008",
+          "windows_server_2012",
+          "windows_server_2016",
+          "windows_server_2019",
+          "windows_server_2022",
+          "windows_server_20h2"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 8
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-26855",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Microsoft Exchange Server Remote Code Execution Vulnerability",
+        "published": "2021-03-03T00:15:12.103",
+        "cvss_scores": [
+          7.5,
+          9.1,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "exchange_server"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 11
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-30190",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A remote code execution vulnerability exists when MSDT is called using the URL protocol from a calling application such as Word. An attacker who successfully exploits this vulnerability can run arbitrary code with the privileges of the calling application. The attacker can then install programs, view, change, or delete data, or create new accounts in the context allowed by the user\u2019s rights.\nPlease see the\u00a0MSRC Blog Entry for important information about steps you can take to protect your system from this vulnerability.",
+        "published": "2022-06-01T20:15:07.983",
+        "cvss_scores": [
+          7.8,
+          9.3
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "windows_10_1507",
+          "windows_10_1607",
+          "windows_10_1809",
+          "windows_10_20h2",
+          "windows_10_21h1",
+          "windows_10_21h2",
+          "windows_11_21h2",
+          "windows_7",
+          "windows_8.1",
+          "windows_rt_8.1",
+          "windows_server_2008",
+          "windows_server_2012",
+          "windows_server_2016",
+          "windows_server_2019",
+          "windows_server_2022",
+          "windows_server_20h2"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 4
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-3156",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Sudo before 1.9.5p2 contains an off-by-one error that can result in a heap-based buffer overflow, which allows privilege escalation to root via \"sudoedit -s\" and a command-line argument that ends with a single backslash character.",
+        "published": "2021-01-26T21:15:12.987",
+        "cvss_scores": [
+          7.2,
+          7.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "active_iq_unified_manager",
+          "cloud_backup",
+          "communications_performance_intelligence_center",
+          "debian_linux",
+          "diskstation_manager",
+          "diskstation_manager_unified_controller",
+          "fedora",
+          "hci_management_node",
+          "micros_compact_workstation_3",
+          "micros_compact_workstation_3_firmware",
+          "micros_es400",
+          "micros_es400_firmware",
+          "micros_kitchen_display_system",
+          "micros_kitchen_display_system_firmware",
+          "micros_workstation_5a",
+          "micros_workstation_5a_firmware",
+          "micros_workstation_6",
+          "micros_workstation_6_firmware",
+          "oncommand_unified_manager_core_package",
+          "ontap_select_deploy_administration_utility",
+          "ontap_tools",
+          "privilege_management_for_mac",
+          "privilege_management_for_unix\\/linux",
+          "skynas",
+          "skynas_firmware",
+          "solidfire",
+          "sudo",
+          "tekelec_platform_distribution",
+          "vs960hd",
+          "vs960hd_firmware",
+          "web_gateway"
+        ],
+        "vendors": [
+          "beyondtrust",
+          "debian",
+          "fedoraproject",
+          "mcafee",
+          "netapp",
+          "oracle",
+          "sudo_project",
+          "synology"
+        ],
+        "reference_count": 68
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-22965",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A Spring MVC or Spring WebFlux application running on JDK 9+ may be vulnerable to remote code execution (RCE) via data binding. The specific exploit requires the application to run on Tomcat as a WAR deployment. If the application is deployed as a Spring Boot executable jar, i.e. the default, it is not vulnerable to the exploit. However, the nature of the vulnerability is more general, and there may be other ways to exploit it.",
+        "published": "2022-04-01T23:15:13.870",
+        "cvss_scores": [
+          7.5,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "access_appliance",
+          "commerce_platform",
+          "communications_cloud_native_core_automated_test_suite",
+          "communications_cloud_native_core_binding_support_function",
+          "communications_cloud_native_core_console",
+          "communications_cloud_native_core_network_exposure_function",
+          "communications_cloud_native_core_network_function_cloud_native_environment",
+          "communications_cloud_native_core_network_repository_function",
+          "communications_cloud_native_core_network_slice_selection_function",
+          "communications_cloud_native_core_policy",
+          "communications_cloud_native_core_security_edge_protection_proxy",
+          "communications_cloud_native_core_unified_data_repository",
+          "communications_policy_management",
+          "communications_unified_inventory_management",
+          "cx_cloud_agent",
+          "financial_services_analytical_applications_infrastructure",
+          "financial_services_behavior_detection_platform",
+          "financial_services_enterprise_case_management",
+          "flex_appliance",
+          "jdk",
+          "mysql_enterprise_monitor",
+          "netbackup_appliance",
+          "netbackup_flex_scale_appliance",
+          "netbackup_virtual_appliance",
+          "operation_scheduler",
+          "product_lifecycle_analytics",
+          "retail_bulk_data_integration",
+          "retail_customer_management_and_segmentation_foundation",
+          "retail_financial_integration",
+          "retail_integration_bus",
+          "retail_merchandising_system",
+          "retail_xstore_point_of_service",
+          "sd-wan_edge",
+          "simatic_speech_assistant_for_machines",
+          "sinec_network_management_system",
+          "sipass_integrated",
+          "siveillance_identity",
+          "spring_framework",
+          "weblogic_server"
+        ],
+        "vendors": [
+          "cisco",
+          "oracle",
+          "siemens",
+          "veritas",
+          "vmware"
+        ],
+        "reference_count": 18
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2019-19781",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "An issue was discovered in Citrix Application Delivery Controller (ADC) and Gateway 10.5, 11.1, 12.0, 12.1, and 13.0. They allow Directory Traversal.",
+        "published": "2019-12-27T14:15:12.070",
+        "cvss_scores": [
+          7.5,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "application_delivery_controller",
+          "application_delivery_controller_firmware",
+          "gateway",
+          "gateway_firmware",
+          "netscaler_gateway",
+          "netscaler_gateway_firmware"
+        ],
+        "vendors": [
+          "citrix"
+        ],
+        "reference_count": 21
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2020-0601",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A spoofing vulnerability exists in the way Windows CryptoAPI (Crypt32.dll) validates Elliptic Curve Cryptography (ECC) certificates.An attacker could exploit the vulnerability by using a spoofed code-signing certificate to sign a malicious executable, making it appear the file was from a trusted, legitimate source, aka 'Windows CryptoAPI Spoofing Vulnerability'.",
+        "published": "2020-01-14T23:15:30.207",
+        "cvss_scores": [
+          5.8,
+          8.1
+        ],
+        "severities": [
+          "HIGH",
+          "MEDIUM"
+        ],
+        "products": [
+          "go",
+          "windows",
+          "windows_10_1507",
+          "windows_10_1607",
+          "windows_10_1709",
+          "windows_10_1803",
+          "windows_10_1809",
+          "windows_10_1903",
+          "windows_10_1909",
+          "windows_server_1803",
+          "windows_server_1903",
+          "windows_server_1909",
+          "windows_server_2016",
+          "windows_server_2019"
+        ],
+        "vendors": [
+          "golang",
+          "microsoft"
+        ],
+        "reference_count": 7
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-21972",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "The vSphere Client (HTML5) contains a remote code execution vulnerability in a vCenter Server plugin. A malicious actor with network access to port 443 may exploit this issue to execute commands with unrestricted privileges on the underlying operating system that hosts vCenter Server. This affects VMware vCenter Server (7.x before 7.0 U1c, 6.7 before 6.7 U3l and 6.5 before 6.5 U3n) and VMware Cloud Foundation (4.x before 4.2 and 3.x before 3.10.1.2).",
+        "published": "2021-02-24T17:15:15.833",
+        "cvss_scores": [
+          9.8,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "cloud_foundation",
+          "vcenter_server"
+        ],
+        "vendors": [
+          "vmware"
+        ],
+        "reference_count": 9
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-1388",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "On F5 BIG-IP 16.1.x versions prior to 16.1.2.2, 15.1.x versions prior to 15.1.5.1, 14.1.x versions prior to 14.1.4.6, 13.1.x versions prior to 13.1.5, and all 12.1.x and 11.6.x versions, undisclosed requests may bypass iControl REST authentication. Note: Software versions which have reached End of Technical Support (EoTS) are not evaluated",
+        "published": "2022-05-05T17:15:10.570",
+        "cvss_scores": [
+          7.5,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "big-ip_access_policy_manager",
+          "big-ip_advanced_firewall_manager",
+          "big-ip_analytics",
+          "big-ip_application_acceleration_manager",
+          "big-ip_application_security_manager",
+          "big-ip_domain_name_system",
+          "big-ip_fraud_protection_service",
+          "big-ip_global_traffic_manager",
+          "big-ip_link_controller",
+          "big-ip_local_traffic_manager",
+          "big-ip_policy_enforcement_manager"
+        ],
+        "vendors": [
+          "f5"
+        ],
+        "reference_count": 11
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2023-23397",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Microsoft Outlook Elevation of Privilege Vulnerability",
+        "published": "2023-03-14T17:15:13.263",
+        "cvss_scores": [
+          9.8
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [
+          "365_apps",
+          "office",
+          "office_long_term_servicing_channel",
+          "outlook"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2023-34362",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "In Progress MOVEit Transfer before 2021.0.6 (13.0.6), 2021.1.4 (13.1.4), 2022.0.4 (14.0.4), 2022.1.5 (14.1.5), and 2023.0.1 (15.0.1), a SQL injection vulnerability has been found in the MOVEit Transfer web application that could allow an unauthenticated attacker to gain access to MOVEit Transfer's database. Depending on the database engine being used (MySQL, Microsoft SQL Server, or Azure SQL), an attacker may be able to infer information about the structure and contents of the database, and execute SQL statements that alter or delete database elements. NOTE: this is exploited in the wild in May and June 2023; exploitation of unpatched systems can occur via HTTP or HTTPS. All versions (e.g., 2020.0 and 2019x) before the five explicitly mentioned versions are affected, including older unsupported versions.",
+        "published": "2023-06-02T14:15:09.487",
+        "cvss_scores": [
+          9.8
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [
+          "moveit_cloud",
+          "moveit_transfer"
+        ],
+        "vendors": [
+          "progress"
+        ],
+        "reference_count": 7
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2023-4863",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Heap buffer overflow in libwebp in Google Chrome prior to 116.0.5845.187 and libwebp 1.3.2 allowed a remote attacker to perform an out of bounds memory write via a crafted HTML page. (Chromium security severity: Critical)",
+        "published": "2023-09-12T15:15:24.327",
+        "cvss_scores": [
+          8.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "active_iq_unified_manager",
+          "chrome",
+          "debian_linux",
+          "edge_chromium",
+          "fedora",
+          "firefox",
+          "honeyview",
+          "libwebp",
+          "seequent_leapfrog",
+          "teams",
+          "thunderbird",
+          "webp_image_extension"
+        ],
+        "vendors": [
+          "bandisoft",
+          "bentley",
+          "debian",
+          "fedoraproject",
+          "google",
+          "microsoft",
+          "mozilla",
+          "netapp",
+          "webmproject"
+        ],
+        "reference_count": 92
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-41040",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Microsoft Exchange Server Elevation of Privilege Vulnerability",
+        "published": "2022-10-03T01:15:08.753",
+        "cvss_scores": [
+          8.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "exchange_server"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 6
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-41082",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Microsoft Exchange Server Remote Code Execution Vulnerability",
+        "published": "2022-10-03T01:15:08.843",
+        "cvss_scores": [
+          8.0
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "exchange_server"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 8
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-26084",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "In affected versions of Confluence Server and Data Center, an OGNL injection vulnerability exists that would allow an unauthenticated attacker to execute arbitrary code on a Confluence Server or Data Center instance. The affected versions are before version 6.13.23, from version 6.14.0 before 7.4.11, from version 7.5.0 before 7.11.6, and from version 7.12.0 before 7.12.5.",
+        "published": "2021-08-30T07:15:06.587",
+        "cvss_scores": [
+          7.5,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "confluence_data_center",
+          "confluence_server"
+        ],
+        "vendors": [
+          "atlassian"
+        ],
+        "reference_count": 5
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-26134",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "In affected versions of Confluence Server and Data Center, an OGNL injection vulnerability exists that would allow an unauthenticated attacker to execute arbitrary code on a Confluence Server or Data Center instance. The affected versions are from 1.3.0 before 7.4.17, from 7.13.0 before 7.13.7, from 7.14.0 before 7.14.3, from 7.15.0 before 7.15.2, from 7.16.0 before 7.16.4, from 7.17.0 before 7.17.4, and from 7.18.0 before 7.18.1.",
+        "published": "2022-06-03T22:15:07.717",
+        "cvss_scores": [
+          7.5,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "confluence_data_center",
+          "confluence_server"
+        ],
+        "vendors": [
+          "atlassian"
+        ],
+        "reference_count": 13
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2020-5902",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "In BIG-IP versions 15.0.0-15.1.0.3, 14.1.0-14.1.2.5, 13.1.0-13.1.3.3, 12.1.0-12.1.5.1, and 11.6.1-11.6.5.1, the Traffic Management User Interface (TMUI), also referred to as the Configuration utility, has a Remote Code Execution (RCE) vulnerability in undisclosed pages.",
+        "published": "2020-07-01T15:15:15.360",
+        "cvss_scores": [
+          9.8,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "big-ip_access_policy_manager",
+          "big-ip_advanced_firewall_manager",
+          "big-ip_advanced_web_application_firewall",
+          "big-ip_analytics",
+          "big-ip_application_acceleration_manager",
+          "big-ip_application_security_manager",
+          "big-ip_ddos_hybrid_defender",
+          "big-ip_domain_name_system",
+          "big-ip_fraud_protection_service",
+          "big-ip_global_traffic_manager",
+          "big-ip_link_controller",
+          "big-ip_local_traffic_manager",
+          "big-ip_policy_enforcement_manager",
+          "ssl_orchestrator"
+        ],
+        "vendors": [
+          "f5"
+        ],
+        "reference_count": 25
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2019-11510",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "In Pulse Secure Pulse Connect Secure (PCS) 8.2 before 8.2R12.1, 8.3 before 8.3R7.1, and 9.0 before 9.0R3.4, an unauthenticated remote attacker can send a specially crafted URI to perform an arbitrary file reading vulnerability .",
+        "published": "2019-05-08T17:29:00.630",
+        "cvss_scores": [
+          7.5,
+          9.9,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "connect_secure"
+        ],
+        "vendors": [
+          "ivanti"
+        ],
+        "reference_count": 23
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-40438",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A crafted request uri-path can cause mod_proxy to forward the request to an origin server choosen by the remote user. This issue affects Apache HTTP Server 2.4.48 and earlier.",
+        "published": "2021-09-16T15:15:07.633",
+        "cvss_scores": [
+          6.8,
+          9.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "MEDIUM"
+        ],
+        "products": [
+          "brocade_fabric_operating_system_firmware",
+          "cloud_backup",
+          "clustered_data_ontap",
+          "debian_linux",
+          "enterprise_linux",
+          "enterprise_linux_eus",
+          "enterprise_linux_for_arm_64",
+          "enterprise_linux_for_arm_64_eus",
+          "enterprise_linux_for_ibm_z_systems",
+          "enterprise_linux_for_ibm_z_systems_eus",
+          "enterprise_linux_for_ibm_z_systems_eus_s390x",
+          "enterprise_linux_for_power_big_endian",
+          "enterprise_linux_for_power_little_endian",
+          "enterprise_linux_for_power_little_endian_eus",
+          "enterprise_linux_for_scientific_computing",
+          "enterprise_linux_server",
+          "enterprise_linux_server_aus",
+          "enterprise_linux_server_for_power_little_endian_update_services_for_sap_solutions",
+          "enterprise_linux_server_tus",
+          "enterprise_linux_server_update_services_for_sap_solutions",
+          "enterprise_linux_server_workstation",
+          "enterprise_linux_update_services_for_sap_solutions",
+          "enterprise_linux_workstation",
+          "enterprise_manager_ops_center",
+          "f5os",
+          "fedora",
+          "http_server",
+          "instantis_enterprisetrack",
+          "jboss_core_services",
+          "rocky_linux",
+          "ruggedcom_nms",
+          "secure_global_desktop",
+          "sinec_nms",
+          "sinema_remote_connect_server",
+          "sinema_server",
+          "software_collections",
+          "storagegrid",
+          "tenable.sc",
+          "zfs_storage_appliance_kit"
+        ],
+        "vendors": [
+          "apache",
+          "broadcom",
+          "debian",
+          "f5",
+          "fedoraproject",
+          "netapp",
+          "oracle",
+          "redhat",
+          "resf",
+          "siemens",
+          "tenable"
+        ],
+        "reference_count": 39
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-22986",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "On BIG-IP versions 16.0.x before 16.0.1.1, 15.1.x before 15.1.2.1, 14.1.x before 14.1.4, 13.1.x before 13.1.3.6, and 12.1.x before 12.1.5.3 amd BIG-IQ 7.1.0.x before 7.1.0.3 and 7.0.0.x before 7.0.0.2, the iControl REST interface has an unauthenticated remote command execution vulnerability. Note: Software versions which have reached End of Software Development (EoSD) are not evaluated.",
+        "published": "2021-03-31T15:15:15.153",
+        "cvss_scores": [
+          9.8,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "big-ip_access_policy_manager",
+          "big-ip_advanced_firewall_manager",
+          "big-ip_advanced_web_application_firewall",
+          "big-ip_analytics",
+          "big-ip_application_acceleration_manager",
+          "big-ip_application_security_manager",
+          "big-ip_ddos_hybrid_defender",
+          "big-ip_domain_name_system",
+          "big-ip_fraud_protection_service",
+          "big-ip_global_traffic_manager",
+          "big-ip_link_controller",
+          "big-ip_local_traffic_manager",
+          "big-ip_policy_enforcement_manager",
+          "big-iq_centralized_management",
+          "ssl_orchestrator"
+        ],
+        "vendors": [
+          "f5"
+        ],
+        "reference_count": 7
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2023-27997",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A heap-based buffer overflow vulnerability [CWE-122] in FortiOS version 7.2.4 and below, version 7.0.11 and below, version 6.4.12 and below, version 6.0.16 and below and FortiProxy version 7.2.3 and below, version 7.0.9 and below, version 2.0.12 and below, version 1.2 all versions, version 1.1 all versions SSL-VPN may allow a remote attacker to execute arbitrary code or commands via specifically crafted requests.",
+        "published": "2023-06-13T09:15:16.613",
+        "cvss_scores": [
+          9.8
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [
+          "fortigate_6000",
+          "fortigate_7000",
+          "fortios",
+          "fortiproxy"
+        ],
+        "vendors": [
+          "fortinet"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2023-2868",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A remote command injection vulnerability exists in the Barracuda Email Security Gateway (appliance form factor only) product effecting versions 5.1.3.001-9.2.0.006. The vulnerability arises out of a failure to comprehensively sanitize the processing of .tar file (tape archives).\u00a0The vulnerability stems from incomplete input validation of a user-supplied .tar file as it pertains to the names of the files contained within the archive. As a consequence, a remote attacker can specifically format these file names in a particular manner that will result in remotely executing a system command through Perl's qx operator with the privileges of the Email Security Gateway product.\u00a0This issue was fixed as part of BNSF-36456 patch. This patch was automatically applied to all customer appliances.",
+        "published": "2023-05-24T19:15:09.363",
+        "cvss_scores": [
+          9.4,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [
+          "email_security_gateway_300",
+          "email_security_gateway_300_firmware",
+          "email_security_gateway_400",
+          "email_security_gateway_400_firmware",
+          "email_security_gateway_600",
+          "email_security_gateway_600_firmware",
+          "email_security_gateway_800",
+          "email_security_gateway_800_firmware",
+          "email_security_gateway_900",
+          "email_security_gateway_900_firmware"
+        ],
+        "vendors": [
+          "barracuda"
+        ],
+        "reference_count": 5
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2022-0847",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A flaw was found in the way the \"flags\" member of the new pipe buffer structure was lacking proper initialization in copy_page_to_iter_pipe and push_pipe functions in the Linux kernel and could thus contain stale values. An unprivileged local user could use this flaw to write to pages in the page cache backed by read only files and as such escalate their privileges on the system.",
+        "published": "2022-03-10T17:44:57.283",
+        "cvss_scores": [
+          7.2,
+          7.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "codeready_linux_builder",
+          "enterprise_linux",
+          "enterprise_linux_eus",
+          "enterprise_linux_for_ibm_z_systems",
+          "enterprise_linux_for_ibm_z_systems_eus",
+          "enterprise_linux_for_power_little_endian",
+          "enterprise_linux_for_power_little_endian_eus",
+          "enterprise_linux_for_real_time",
+          "enterprise_linux_for_real_time_for_nfv",
+          "enterprise_linux_for_real_time_for_nfv_tus",
+          "enterprise_linux_for_real_time_tus",
+          "enterprise_linux_server_aus",
+          "enterprise_linux_server_for_power_little_endian_update_services_for_sap_solutions",
+          "enterprise_linux_server_tus",
+          "enterprise_linux_server_update_services_for_sap_solutions",
+          "fedora",
+          "h300e",
+          "h300e_firmware",
+          "h300s",
+          "h300s_firmware",
+          "h410c",
+          "h410c_firmware",
+          "h410s",
+          "h410s_firmware",
+          "h500e",
+          "h500e_firmware",
+          "h500s",
+          "h500s_firmware",
+          "h700e",
+          "h700e_firmware",
+          "h700s",
+          "h700s_firmware",
+          "linux_kernel",
+          "ovirt-engine",
+          "scalance_lpe9403",
+          "scalance_lpe9403_firmware",
+          "sma1000",
+          "sma1000_firmware",
+          "virtualization_host"
+        ],
+        "vendors": [
+          "fedoraproject",
+          "linux",
+          "netapp",
+          "ovirt",
+          "redhat",
+          "siemens",
+          "sonicwall"
+        ],
+        "reference_count": 21
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-4034",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "A local privilege escalation vulnerability was found on polkit's pkexec utility. The pkexec application is a setuid tool designed to allow unprivileged users to run commands as privileged users according predefined policies. The current version of pkexec doesn't handle the calling parameters count correctly and ends trying to execute environment variables as commands. An attacker can leverage this by crafting environment variables in such a way it'll induce pkexec to execute arbitrary code. When successfully executed the attack can cause a local privilege escalation given unprivileged users administrative rights on the target machine.",
+        "published": "2022-01-28T20:15:12.193",
+        "cvss_scores": [
+          7.2,
+          7.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "command_center",
+          "enterprise_linux",
+          "enterprise_linux_desktop",
+          "enterprise_linux_eus",
+          "enterprise_linux_for_ibm_z_systems",
+          "enterprise_linux_for_ibm_z_systems_eus",
+          "enterprise_linux_for_power_big_endian",
+          "enterprise_linux_for_power_little_endian",
+          "enterprise_linux_for_power_little_endian_eus",
+          "enterprise_linux_for_scientific_computing",
+          "enterprise_linux_server",
+          "enterprise_linux_server_aus",
+          "enterprise_linux_server_eus",
+          "enterprise_linux_server_tus",
+          "enterprise_linux_server_update_services_for_sap_solutions",
+          "enterprise_linux_workstation",
+          "enterprise_storage",
+          "http_server",
+          "linux_enterprise_desktop",
+          "linux_enterprise_high_performance_computing",
+          "linux_enterprise_server",
+          "linux_enterprise_workstation_extension",
+          "manager_proxy",
+          "manager_server",
+          "polkit",
+          "scalance_lpe9403",
+          "scalance_lpe9403_firmware",
+          "sinumerik_edge",
+          "starwind_virtual_san",
+          "ubuntu_linux",
+          "zfs_storage_appliance_kit"
+        ],
+        "vendors": [
+          "canonical",
+          "oracle",
+          "polkit_project",
+          "redhat",
+          "siemens",
+          "starwindsoftware",
+          "suse"
+        ],
+        "reference_count": 24
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2020-14882",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Vulnerability in the Oracle WebLogic Server product of Oracle Fusion Middleware (component: Console). Supported versions that are affected are 10.3.6.0.0, 12.1.3.0.0, 12.2.1.3.0, 12.2.1.4.0 and 14.1.1.0.0. Easily exploitable vulnerability allows unauthenticated attacker with network access via HTTP to compromise Oracle WebLogic Server. Successful attacks of this vulnerability can result in takeover of Oracle WebLogic Server. CVSS 3.1 Base Score 9.8 (Confidentiality, Integrity and Availability impacts). CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H).",
+        "published": "2020-10-21T15:15:25.407",
+        "cvss_scores": [
+          9.8,
+          10.0
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "weblogic_server"
+        ],
+        "vendors": [
+          "oracle"
+        ],
+        "reference_count": 9
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2021-1675",
+      "category": "real_known",
+      "ground_truth": {
+        "exists": true,
+        "description": "Windows Print Spooler Remote Code Execution Vulnerability",
+        "published": "2021-06-08T23:15:08.267",
+        "cvss_scores": [
+          7.8,
+          9.3
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "windows_10_1507",
+          "windows_10_1607",
+          "windows_10_1809",
+          "windows_10_1909",
+          "windows_10_2004",
+          "windows_10_20h2",
+          "windows_10_21h1",
+          "windows_7",
+          "windows_8.1",
+          "windows_rt_8.1",
+          "windows_server_2004",
+          "windows_server_2008",
+          "windows_server_2012",
+          "windows_server_2016",
+          "windows_server_2019"
+        ],
+        "vendors": [
+          "microsoft"
+        ],
+        "reference_count": 11
+      },
+      "provenance": {
+        "source": "nvd cveId lookup",
+        "seed_list": true
+      }
+    },
+    {
+      "id": "CVE-2026-43022",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: hci_sync: hci_cmd_sync_queue_once() return -EEXIST if exists\n\nhci_cmd_sync_queue_once() needs to indicate whether a queue item was\nadded, so caller can know if callbacks are called, so it can avoid\nleaking resources.\n\nChange the function to return -EEXIST if queue item already exists.\n\nModify all callsites to handle that.",
+        "published": "2026-05-01T15:16:46.483",
+        "cvss_scores": [
+          5.5
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-7678",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "A vulnerability was identified in YunaiV yudao-cloud up to 2026.01. This affects the function getDataBySQL of the file yudao-module-report-biz/src/main/java/io/github/ruoyi/report/service/impl/GoViewDataServiceImpl.java. Such manipulation leads to sql injection. It is possible to launch the attack remotely. The exploit is publicly available and might be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+        "published": "2026-05-03T05:15:59.030",
+        "cvss_scores": [
+          2.1,
+          6.3,
+          6.5
+        ],
+        "severities": [
+          "LOW",
+          "MEDIUM"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 4
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-41203",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "CI4MS is a CodeIgniter 4-based CMS skeleton that delivers a production-ready, modular architecture with RBAC authorization and theme support. Prior to version 0.31.5.0, ci4ms Theme::upload extracts user uploaded ZIP archives without validating entry names, allowing an authenticated backend user with the theme create permission to write files to arbitrary filesystem locations (Zip Slip) and achieve remote code execution by dropping a PHP file under the public web root. This issue has been patched in version 0.31.5.0.",
+        "published": "2026-05-07T04:16:27.670",
+        "cvss_scores": [
+          9.4
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-43414",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: qla2xxx: Completely fix fcport double free\n\nIn qla24xx_els_dcmd_iocb() sp->free is set to qla2x00_els_dcmd_sp_free().\nWhen an error happens, this function is called by qla2x00_sp_release(),\nwhen kref_put() releases the first and the last reference.\n\nqla2x00_els_dcmd_sp_free() frees fcport by calling qla2x00_free_fcport().\nDoing it one more time after kref_put() is a bad idea.",
+        "published": "2026-05-08T15:16:53.353",
+        "cvss_scores": [
+          9.8
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-42368",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "A privilege escalation vulnerability exists in the Web Interface functionality of GeoVision LPC2011/LPC2211 1.10. A specially crafted HTTP request can lead to execute priviledged operation. An attacker can visit a webpage to trigger this vulnerability.",
+        "published": "2026-05-04T01:16:04.020",
+        "cvss_scores": [
+          9.9
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [
+          "gv-lpc2011",
+          "gv-lpc2011_firmware",
+          "gv-lpc2211",
+          "gv-lpc2211_firmware"
+        ],
+        "vendors": [
+          "geovision"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-41934",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Vvveb before version 1.0.8.2 contains an authenticated remote code execution vulnerability in the admin code editor that allows low-privilege authenticated users to execute arbitrary code through insufficient file extension restrictions, with the uploaded payload then executable via subsequent unauthenticated HTTP requests. Attackers with editor, author, contributor, or site_admin roles can write a malicious .htaccess file to map arbitrary extensions to the PHP handler, then upload PHP code with that extension to achieve unauthenticated remote code execution when the file is accessed via HTTP.",
+        "published": "2026-05-06T19:16:37.417",
+        "cvss_scores": [
+          8.7,
+          8.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 4
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2024-33722",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "SOPlanning 1.52.00 is vulnerable to SQL Injection by an authenticated user via projets.php with statut[].",
+        "published": "2026-05-08T06:16:09.417",
+        "cvss_scores": [
+          6.3
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 1
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-43861",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "mutt before 2.3.2 does not check for '\\0' in url_pct_decode.",
+        "published": "2026-05-04T07:16:00.730",
+        "cvss_scores": [
+          3.7
+        ],
+        "severities": [
+          "LOW"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 1
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2025-1978",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Remote Code Execution Vulnerability in Hitachi Storage Navigator and the maintenance console in Hitachi Virtual Storage Platform G130, G150, G350, G370, G700, G900, F350, F370, F700, F900, Hitachi Virtual Storage Platform E390, E590, E790, E990, E1090, E390H, E590H, E790H, E1090H, Hitachi Virtual Storage Platform One Block 23, One Block 24, One Block 26, One Block 28.\n\nThis issue affects Virtual Storage Platform G130, G150, G350, G370, G700, G900, F350, F370, F700, F900,\u00a0Hitachi Virtual Storage Platform E390, E590, E790, E990, E1090, E390H, E590H, E790H, E1090H, Hitachi Virtual Storage Platform One Block 23, One Block 24, One Block 26, One Block 28\u00a0 : before DKCMAIN Ver. 88-08-16-xx/00, SVP Ver. 88-08-18-xx/00, before DKCMAIN Ver. 93-07-26-xx/00, SVP Ver. 93-07-26-xx/00, before DKCMAIN Ver. A3-04-02-xx/00, MPC Ver. A3-04-02-xx/00, before DKCMAIN Ver. A3-03-41-xx/00, MPC Ver. A3-03-41-xx/00, before DKCMAIN Ver. A3-03-03-xx/00, MPC Ver. A3-03-03-xx/00.",
+        "published": "2026-05-07T09:16:26.017",
+        "cvss_scores": [
+          8.3,
+          9.8
+        ],
+        "severities": [
+          "CRITICAL",
+          "HIGH"
+        ],
+        "products": [
+          "virtual_storage_one_block",
+          "vsp_e1090",
+          "vsp_e1090_firmware",
+          "vsp_e1090h",
+          "vsp_e1090h_firmware",
+          "vsp_e390",
+          "vsp_e390_firmware",
+          "vsp_e390h",
+          "vsp_e390h_firmware",
+          "vsp_e590",
+          "vsp_e590_firmware",
+          "vsp_e590h",
+          "vsp_e590h_firmware",
+          "vsp_e790",
+          "vsp_e790_firmware",
+          "vsp_e790h",
+          "vsp_e790h_firmware",
+          "vsp_e990",
+          "vsp_e990_firmware",
+          "vsp_f350",
+          "vsp_f350_firmware",
+          "vsp_f370",
+          "vsp_f370_firmware",
+          "vsp_f700",
+          "vsp_f700_firmware",
+          "vsp_f900",
+          "vsp_f900_firmware",
+          "vsp_g130",
+          "vsp_g130_firmware",
+          "vsp_g150",
+          "vsp_g150_firmware",
+          "vsp_g350",
+          "vsp_g350_firmware",
+          "vsp_g370",
+          "vsp_g370_firmware",
+          "vsp_g700",
+          "vsp_g700_firmware",
+          "vsp_g900",
+          "vsp_g900_firmware"
+        ],
+        "vendors": [
+          "hitachi"
+        ],
+        "reference_count": 1
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-7535",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "A vulnerability was found in Open5GS up to 2.7.7. This affects the function amf_namf_comm_handle_registration_status_update_request in the library /lib/app/ogs-init.c of the file /namf-comm/v1/ue-contexts/{ueContextId}/transfer-update. Performing a manipulation of the argument ueContextId results in denial of service. The attack can be initiated remotely. The exploit has been made public and could be used. The project was informed of the problem early through an issue report but has not responded yet.",
+        "published": "2026-05-01T01:16:18.087",
+        "cvss_scores": [
+          2.1,
+          4.0,
+          4.3
+        ],
+        "severities": [
+          "LOW",
+          "MEDIUM"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 6
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-42571",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Pelican is a platform for creating data federations. From versions 7.21.0 to before 7.21.5, 7.22.0 to before 7.22.3, 7.23.0 to before 7.23.3, and 7.24.0 to before 7.24.2, there is a a privilege escalation vulnerability affecting Pelican's Web User Interface (WebUI). This attack allows any user authenticated to the WebUI via OAuth to gain admin privileges under certain configurations. This issue has been patched in versions 7.21.5, 7.22.3, 7.23.3, and 7.24.2.",
+        "published": "2026-05-09T20:16:29.277",
+        "cvss_scores": [
+          9.0
+        ],
+        "severities": [
+          "CRITICAL"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-39816",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "The optional extension component TinkerpopClientService is missing the Restricted annotation with the Execute Code Required Permission in Apache NiFi 2.0.0-M1 through 2.8.0. The TinkerpopClientService supports configuration of ByteCode Submission for the Script Submission Type, enabling Groovy Script execution in the service prior to submitting the query. The missing Restricted annotation allows users without the Execute Code Permission to configure the Service in installations that use fine-grained authorization and have the optional TinkerpopClientService installed. Apache NiFi installations that do not have the nifi-other-graph-services-nar installed are not subject to this vulnerability. Upgrading to Apache NiFi 2.9.0 is the recommended mitigation.",
+        "published": "2026-05-08T14:16:32.667",
+        "cvss_scores": [
+          7.5,
+          8.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "nifi"
+        ],
+        "vendors": [
+          "apache"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-31729",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: typec: ucsi: validate connector number in ucsi_notify_common()\n\nThe connector number extracted from CCI via UCSI_CCI_CONNECTOR() is a\n7-bit field (0-127) that is used to index into the connector array in\nucsi_connector_change(). However, the array is only allocated for the\nnumber of connectors reported by the device (typically 2-4 entries).\n\nA malicious or malfunctioning device could report an out-of-range\nconnector number in the CCI, causing an out-of-bounds array access in\nucsi_connector_change().\n\nAdd a bounds check in ucsi_notify_common(), the central point where CCI\nis parsed after arriving from hardware, so that bogus connector numbers\nare rejected before they propagate further.",
+        "published": "2026-05-01T15:16:35.467",
+        "cvss_scores": [
+          7.8
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 4
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-43073",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86-64: rename misleadingly named '__copy_user_nocache()' function\n\nThis function was a masterclass in bad naming, for various historical\nreasons.\n\nIt claimed to be a non-cached user copy.  It is literally _neither_ of\nthose things.  It's a specialty memory copy routine that uses\nnon-temporal stores for the destination (but not the source), and that\ndoes exception handling for both source and destination accesses.\n\nAlso note that while it works for unaligned targets, any unaligned parts\n(whether at beginning or end) will not use non-temporal stores, since\nonly words and quadwords can be non-temporal on x86.\n\nThe exception handling means that it _can_ be used for user space\naccesses, but not on its own - it needs all the normal \"start user space\naccess\" logic around it.\n\nBut typically the user space access would be the source, not the\nnon-temporal destination.  That was the original intention of this,\nwhere the destination was some fragile persistent memory target that\nneeded non-temporal stores in order to catch machine check exceptions\nsynchronously and deal with them gracefully.\n\nThus that non-descriptive name: one use case was to copy from user space\ninto a non-cached kernel buffer.  However, the existing users are a mix\nof that intended use-case, and a couple of random drivers that just did\nthis as a performance tweak.\n\nSome of those random drivers then actively misused the user copying\nversion (with STAC/CLAC and all) to do kernel copies without ever even\ncaring about the exception handling, _just_ for the non-temporal\ndestination.\n\nRename it as a first small step to actually make it halfway sane, and\nchange the prototype to be more normal: it doesn't take a user pointer\nunless the caller has done the proper conversion, and the argument size\nis the full size_t (it still won't actually copy more than 4GB in one\ngo, but there's also no reason to silently truncate the size argument in\nthe caller).\n\nFinally, use this now sanely named function in the NTB code, which\nmis-used a user copy version (with STAC/CLAC and all) of this interface\ndespite it not actually being a user copy at all.",
+        "published": "2026-05-05T16:16:16.650",
+        "cvss_scores": [
+          5.5
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 6
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-41519",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Weblate is a web based localization tool. Prior to version 5.17.1, when a user changes their password, browser sessions are correctly invalidated via \"cycle_session_keys()\", but DRF API tokens (\"wlu_*\" prefix) stored in \"authtoken_token\" are not revoked. This issue has been patched in version 5.17.1.",
+        "published": "2026-05-07T15:16:07.160",
+        "cvss_scores": [
+          4.2,
+          5.4
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "weblate"
+        ],
+        "vendors": [
+          "weblate"
+        ],
+        "reference_count": 4
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-42296",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Argo Workflows is an open source container-native workflow engine for orchestrating parallel jobs on Kubernetes. Prior to versions 3.7.14 and 4.0.5, a user with create Workflow permission can bypass templateReferencing: Strict to get host network access, switch service accounts, override pod security context, add tolerations to schedule on control-plane nodes, or enable SA token mounting. This defeats the stated purpose of the feature. The practical impact depends on what Kubernetes-level controls are in place. Clusters with PodSecurity admission or OPA/Gatekeeper would independently block some of these (like hostNetwork). Clusters that rely on Argo's Strict mode as the primary enforcement layer are fully exposed. This issue has been patched in versions 3.7.14 and 4.0.5.",
+        "published": "2026-05-09T04:16:25.563",
+        "cvss_scores": [
+          8.1
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "argo_workflows"
+        ],
+        "vendors": [
+          "argoproj"
+        ],
+        "reference_count": 8
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2021-47926",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Contact Form to Email 1.3.24 contains a stored cross-site scripting vulnerability that allows authenticated attackers to inject malicious scripts by creating forms with script tags in the form name field. Attackers can craft form names containing JavaScript code that executes when other logged-in users access the form management page, enabling session hijacking or credential theft.",
+        "published": "2026-05-10T13:16:28.573",
+        "cvss_scores": [
+          5.1,
+          6.4
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-41685",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Incus is a system container and virtual machine manager. Prior to version 7.0.0, uploads of large amount of data by authenticated users can run the Incus server out of disk space, potentially taking down the host system. The impact here is limited for anyone using storage.images_volume and storage.backups_volume as those users will have large uploads be stored on those volumes rather than directly on the host filesystem. This is the default behavior on IncusOS. This issue has been patched in version 7.0.0.",
+        "published": "2026-05-07T14:16:03.500",
+        "cvss_scores": [
+          4.3
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "incus"
+        ],
+        "vendors": [
+          "linuxcontainers"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-43043",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: af-alg - fix NULL pointer dereference in scatterwalk\n\nThe AF_ALG interface fails to unmark the end of a Scatter/Gather List (SGL)\nwhen chaining a new af_alg_tsgl structure. If a sendmsg() fills an SGL\nexactly to MAX_SGL_ENTS, the last entry is marked as the end. A subsequent\nsendmsg() allocates a new SGL and chains it, but fails to clear the end\nmarker on the previous SGL's last data entry.\n\nThis causes the crypto scatterwalk to hit a premature end, returning NULL\non sg_next() and leading to a kernel panic during dereference.\n\nFix this by explicitly unmarking the end of the previous SGL when\nperforming sg_chain() in af_alg_alloc_tsgl().",
+        "published": "2026-05-01T15:16:50.563",
+        "cvss_scores": [
+          5.5
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 8
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-8022",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Inappropriate implementation in MHTML in Google Chrome prior to 148.0.7778.96 allowed a remote attacker who convinced a user to engage in specific UI gestures to leak cross-origin data via a crafted MHTML page. (Chromium security severity: Low)",
+        "published": "2026-05-06T19:16:53.153",
+        "cvss_scores": [
+          3.1
+        ],
+        "severities": [
+          "LOW"
+        ],
+        "products": [
+          "chrome",
+          "linux_kernel",
+          "macos",
+          "windows"
+        ],
+        "vendors": [
+          "apple",
+          "google",
+          "linux",
+          "microsoft"
+        ],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-41654",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Weblate is a web based localization tool. Prior to version 5.17.1, an authenticated user with project.add permission (default on hosted Weblate SaaS and for any user holding an active billing/trial plan) can import a crafted project backup ZIP whose components/<name>.json contains an attacker-chosen repo URL pointing at a private address (e.g. http://127.0.0.1:9999/) or using a non-allow-listed scheme (e.g. file://, git://). Weblate persists the component via Component.objects.bulk_create([component])[0], which bypasses Django's full_clean() and therefore never runs the validate_repo_url validator. The URL is subsequently written verbatim into .git/config by configure_repo(pull=False). This issue has been patched in version 5.17.1.",
+        "published": "2026-05-07T15:16:07.907",
+        "cvss_scores": [
+          5.3,
+          8.1
+        ],
+        "severities": [
+          "HIGH",
+          "MEDIUM"
+        ],
+        "products": [
+          "weblate"
+        ],
+        "vendors": [
+          "weblate"
+        ],
+        "reference_count": 6
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2024-46508",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "yeti-platform yeti before 2.1.12 allows attackers to generate valid JWT tokens is the secret is not changed (by setting YETI_AUTH_SECRET_KEY to a value other than SECRET).",
+        "published": "2026-05-08T06:16:09.963",
+        "cvss_scores": [
+          7.5
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [
+          "yeti"
+        ],
+        "vendors": [
+          "yeti-platform"
+        ],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-43372",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: dsa: microchip: Fix error path in PTP IRQ setup\n\nIf request_threaded_irq() fails during the PTP message IRQ setup, the\nnewly created IRQ mapping is never disposed. Indeed, the\nksz_ptp_irq_setup()'s error path only frees the mappings that were\nsuccessfully set up.\n\nDispose the newly created mapping if the associated\nrequest_threaded_irq() fails at setup.",
+        "published": "2026-05-08T15:16:48.313",
+        "cvss_scores": [
+          5.5
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 5
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-7722",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "A vulnerability was detected in PrefectHQ prefect up to 3.6.21. This impacts the function endswith of the file /api/health of the component Health Check API. Performing a manipulation results in improper authentication. The attack is possible to be carried out remotely. The exploit is now public and may be used. Upgrading to version 3.6.22 will fix this issue. The patch is named e21617125335025b4b27e7d6f0ca028e8e8f3b79. Upgrading the affected component is recommended. The vendor was contacted early, responded in a very professional manner and quickly released a fixed version of the affected product.",
+        "published": "2026-05-04T03:16:12.967",
+        "cvss_scores": [
+          5.0,
+          5.3,
+          5.5
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 8
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-35192",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "An issue was discovered in 6.0 before 6.0.5 and 5.2 before 5.2.14.\nResponse headers do not vary on cookies if a session is not modified, but `SESSION_SAVE_EVERY_REQUEST` is `True`. A remote attacker can steal a user's session after that user visits a cached public page.\nEarlier, unsupported Django series (such as 5.0.x, 4.1.x, and 3.2.x) were not evaluated and may also be affected.\nDjango would like to thank Cantina for reporting this issue.",
+        "published": "2026-05-05T16:16:12.383",
+        "cvss_scores": [
+          2.3,
+          6.5
+        ],
+        "severities": [
+          "LOW",
+          "MEDIUM"
+        ],
+        "products": [
+          "django"
+        ],
+        "vendors": [
+          "djangoproject"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-8226",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "A security flaw has been discovered in Open5GS up to 2.7.7. This vulnerability affects the function ogs_pcc_rule_install_flow_from_media in the library /lib/proto/types.c. The manipulation results in denial of service. The attack can be launched remotely. The exploit has been released to the public and may be used for attacks. The project was informed of the problem early through an issue report but has not responded yet.",
+        "published": "2026-05-10T05:16:12.240",
+        "cvss_scores": [
+          5.0,
+          5.3,
+          5.5,
+          7.5
+        ],
+        "severities": [
+          "HIGH",
+          "MEDIUM"
+        ],
+        "products": [
+          "open5gs"
+        ],
+        "vendors": [
+          "open5gs"
+        ],
+        "reference_count": 5
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-7949",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Out of bounds read in Skia in Google Chrome prior to 148.0.7778.96 allowed a remote attacker who had compromised the renderer process to leak cross-origin data via a crafted Chrome Extension. (Chromium security severity: Medium)",
+        "published": "2026-05-06T19:16:43.217",
+        "cvss_scores": [
+          3.1
+        ],
+        "severities": [
+          "LOW"
+        ],
+        "products": [
+          "chrome",
+          "linux_kernel",
+          "macos",
+          "windows"
+        ],
+        "vendors": [
+          "apple",
+          "google",
+          "linux",
+          "microsoft"
+        ],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-41422",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Daptin is a GraphQL/JSON-API headless CMS. Prior to version 0.11.4, the /aggregate/:typename endpoint accepted column and group query parameters that were passed verbatim to goqu.L() \u2014 a raw SQL literal expression builder \u2014 without any validation. This bypassed all parameterization and allowed authenticated users with any valid session to inject arbitrary SQL expressions. This issue has been patched in version 0.11.4.",
+        "published": "2026-05-07T15:16:06.813",
+        "cvss_scores": [
+          8.3
+        ],
+        "severities": [
+          "HIGH"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 2
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-43272",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nring-buffer: Fix possible dereference of uninitialized pointer\n\nThere is a pointer head_page in rb_meta_validate_events() which is not\ninitialized at the beginning of a function. This pointer can be dereferenced\nif there is a failure during reader page validation. In this case the control\nis passed to \"invalid\" label where the pointer is dereferenced in a loop.\n\nTo fix the issue initialize orig_head and head_page before calling\nrb_validate_buffer.\n\nFound by Linux Verification Center (linuxtesting.org) with SVACE.",
+        "published": "2026-05-06T12:16:48.433",
+        "cvss_scores": [
+          5.5
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [
+          "linux_kernel"
+        ],
+        "vendors": [
+          "linux"
+        ],
+        "reference_count": 3
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2026-6863",
+      "category": "real_recent",
+      "ground_truth": {
+        "exists": true,
+        "description": "Velociraptor versions prior to 0.76.4 contain a cross organization authorization bypass in the HTTP API. A user with only the reader role in the root organization (the lowest authenticated role, holding only READ_RESULTS permission ) can issue a single authenticated HTTP GET that can read any files from other orgs - even if they have no explicit permissions in the target org.\n\n\n\nHowever, the problem does not occur in reverse - a user with read access to a sub org is unable to read from other org or the root org.",
+        "published": "2026-05-06T16:16:12.030",
+        "cvss_scores": [
+          6.8
+        ],
+        "severities": [
+          "MEDIUM"
+        ],
+        "products": [],
+        "vendors": [],
+        "reference_count": 1
+      },
+      "provenance": {
+        "source": "nvd pubDate range 2026-05..2026-07"
+      }
+    },
+    {
+      "id": "CVE-2021-58864",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2020-72931",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2020-54872",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2019-78498",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2024-87943",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-68288",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2019-66399",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2024-84768",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2021-58686",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-74421",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2020-91847",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-54940",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2024-98730",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2024-44901",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-62504",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2020-59500",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-64217",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-67020",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2021-60360",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-63253",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2021-54030",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2020-65080",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2020-42421",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2024-71060",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-65840",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2019-68442",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2019-50563",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2024-40279",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2022-60367",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2023-81479",
+      "category": "fake_random",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "generated; verified absent from NVD"
+      }
+    },
+    {
+      "id": "CVE-2026-71654",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-41654"
+      }
+    },
+    {
+      "id": "CVE-2023-27097",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2023-27997"
+      }
+    },
+    {
+      "id": "CVE-2022-16134",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2022-26134"
+      }
+    },
+    {
+      "id": "CVE-2024-33702",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2024-33722"
+      }
+    },
+    {
+      "id": "CVE-2021-40458",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-40438"
+      }
+    },
+    {
+      "id": "CVE-2026-52368",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-42368"
+      }
+    },
+    {
+      "id": "CVE-2022-90190",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2022-30190"
+      }
+    },
+    {
+      "id": "CVE-2026-35992",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-35192"
+      }
+    },
+    {
+      "id": "CVE-2021-44288",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-44228"
+      }
+    },
+    {
+      "id": "CVE-2020-04882",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2020-14882"
+      }
+    },
+    {
+      "id": "CVE-2021-26850",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-26855"
+      }
+    },
+    {
+      "id": "CVE-2026-41944",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-41934"
+      }
+    },
+    {
+      "id": "CVE-2021-9156",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-3156"
+      }
+    },
+    {
+      "id": "CVE-2026-41559",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-41519"
+      }
+    },
+    {
+      "id": "CVE-2026-41222",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-41422"
+      }
+    },
+    {
+      "id": "CVE-2024-93722",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2024-33722"
+      }
+    },
+    {
+      "id": "CVE-2026-41223",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-41203"
+      }
+    },
+    {
+      "id": "CVE-2026-71729",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-31729"
+      }
+    },
+    {
+      "id": "CVE-2021-40428",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-40438"
+      }
+    },
+    {
+      "id": "CVE-2026-42361",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-42368"
+      }
+    },
+    {
+      "id": "CVE-2026-48414",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-43414"
+      }
+    },
+    {
+      "id": "CVE-2021-42926",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-47926"
+      }
+    },
+    {
+      "id": "CVE-2021-44928",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-44228"
+      }
+    },
+    {
+      "id": "CVE-2024-46504",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2024-46508"
+      }
+    },
+    {
+      "id": "CVE-2021-4634",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-4034"
+      }
+    },
+    {
+      "id": "CVE-2021-82986",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-22986"
+      }
+    },
+    {
+      "id": "CVE-2026-47519",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2026-41519"
+      }
+    },
+    {
+      "id": "CVE-2021-26284",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-26084"
+      }
+    },
+    {
+      "id": "CVE-2021-2675",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-1675"
+      }
+    },
+    {
+      "id": "CVE-2021-55046",
+      "category": "fake_near_miss",
+      "ground_truth": {
+        "exists": false
+      },
+      "provenance": {
+        "source": "one digit off a real CVE; verified absent",
+        "near": "CVE-2021-45046"
+      }
+    }
+  ]
+}
