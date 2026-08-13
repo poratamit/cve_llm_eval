@@ -6,8 +6,10 @@
              -> prints % agreement between judge and your manual labels
 
 Sampling targets ~15-20% overall, but force-includes every flagged row
-(rule/judge conflicts and unsure) and over-samples the hardest subset:
-fake IDs answered with search on (the three-way retrieval diagnosis).
+(needs_handcheck = rule/judge conflicts + any judge failure) and over-samples
+the hardest subset: fake IDs answered with search on (the three-way retrieval
+diagnosis). Model declines ("declined") are a clean label and stratified like
+any other, not force-included.
 """
 from __future__ import annotations
 
@@ -28,15 +30,24 @@ FRACTION = 0.18
 def export():
     df = pd.read_csv(LABELS_CSV)
     forced = df[df["needs_handcheck"]]
-    hard = df[(df["category"].isin(C.FAKE_CATEGORIES)) & (df["condition"] == "on")]
+    # Over-sample only the genuinely hard subset the proposal targets: fake IDs the
+    # model did NOT reject under search-on -> these are the fabricated/hijacked cases
+    # that carry the three-way retrieval diagnosis. (Taking *all* fake+search-on rows
+    # ballooned the sample to ~43%; rejections are the easy, high-agreement case.)
+    hard = df[(df["category"].isin(C.FAKE_CATEGORIES)) & (df["condition"] == "on")
+              & (~df["judge_label"].isin(["rejected"]))]
     rest = df.drop(forced.index)
 
     # ~18% of the rest, stratified by (category, condition, judge_label).
-    def frac(g):
+    # Iterate the groups rather than groupby.apply: pandas 3 excludes the
+    # grouping columns from the frame passed to apply, which silently blanked
+    # category/condition/judge_label on every sampled row (and so blanked the
+    # very columns `agreement()` compares).
+    picks = []
+    for _, g in rest.groupby(["category", "condition", "judge_label"], dropna=False):
         n = max(1, round(len(g) * FRACTION))
-        return g.sample(n=min(n, len(g)), random_state=SEED)
-    strat = rest.groupby(["category", "condition", "judge_label"],
-                         group_keys=False).apply(frac)
+        picks.append(g.sample(n=min(n, len(g)), random_state=SEED))
+    strat = pd.concat(picks) if picks else rest.iloc[:0]
 
     sample = pd.concat([forced, hard, strat]).drop_duplicates(subset=["id", "model", "condition", "repeat"])
     sample = sample.sample(frac=1.0, random_state=SEED)  # shuffle so labeler is blind to grouping

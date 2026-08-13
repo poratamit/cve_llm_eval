@@ -23,8 +23,14 @@ MODELS = [
     "gemini-3.5-flash-lite",   # gen 3.5, lite  -> generation contrast at fixed tier
     "gemini-3.5-flash",        # gen 3.5, mid   -> tier contrast
 ]
-# Strong classifier; never decides truth (NVD does), only interprets language.
-JUDGE_MODEL = "gemini-3.1-pro-preview"
+# The judge never decides truth (NVD does), only interprets language against the
+# ground truth we hand it. Requirements: (1) DISJOINT from the subject set above
+# -- a subject grading its own answers is self-evaluation bias -- and (2) enough
+# daily throughput for ~2,160 calls. gemini-3.6-flash satisfies both: it is not a
+# subject, it is newer/stronger than every subject (grades "down" the capability
+# ladder), and being GA (not -preview) it carries the normal high flash RPD rather
+# than the preview-Pro 250 requests/day cap that blocked gemini-3.1-pro-preview.
+JUDGE_MODEL = "gemini-3.6-flash"
 
 CONDITIONS = ["off", "on"]      # search disabled / model may search
 REPEATS = 3
@@ -41,6 +47,7 @@ PRICES = {
     "gemini-3.1-flash-lite": (0.25, 1.50),
     "gemini-3.5-flash-lite": (0.10, 0.40),
     "gemini-3.5-flash":      (0.30, 2.50),
+    "gemini-3.6-flash":      (0.30, 2.50),   # judge; flash-tier, advisory only
     "gemini-3.1-pro-preview": (1.25, 10.00),
 }
 # Grounded-search prices per 1k grounded prompts, after the free tier.

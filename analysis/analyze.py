@@ -59,9 +59,14 @@ def rq1(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------- RQ2
 def rq2(df: pd.DataFrame):
     fakes = df[~df["is_real"]]
-    dist = (fakes.groupby(["model", "condition", "judge_label"]).size()
-            .groupby(level=[0, 1]).apply(lambda s: 100 * s / s.sum())
-            .rename("pct").reset_index())
+    # % of each fake outcome within (model, condition). Computed via an explicit
+    # merge of counts/totals -- avoids groupby.apply, which in pandas 3 drops the
+    # grouping columns and breaks the downstream reset_index/pivot.
+    counts = (fakes.groupby(["model", "condition", "judge_label"]).size()
+              .rename("n").reset_index())
+    totals = fakes.groupby(["model", "condition"]).size().rename("tot").reset_index()
+    dist = counts.merge(totals, on=["model", "condition"])
+    dist["pct"] = (100 * dist["n"] / dist["tot"]).round(1)
     pivot = dist.pivot_table(index=["model", "condition"], columns="judge_label",
                              values="pct", fill_value=0).round(1)
     # Three-way retrieval diagnosis for fake + search-on non-rejections.
@@ -74,8 +79,10 @@ def rq2(df: pd.DataFrame):
 # ---------------------------------------------------------------- RQ3
 def rq3(df: pd.DataFrame) -> pd.DataFrame:
     reals = df[df["is_real"] & df["confidence"].notna()].copy()
-    reals["outcome"] = reals["judge_label"].map(
-        lambda x: "correct" if x == "correct" else "wrong/unsure")
+    # correct / wrong / declined are distinct outcomes: a decline makes no factual
+    # claim, so folding it into "wrong" would distort the comparison -- and declines
+    # carry strikingly high confidence, which is itself an RQ3 finding.
+    reals["outcome"] = reals["judge_label"]
     conf = (reals.groupby(["model", "outcome"])["confidence"]
             .agg(["mean", "count"]).round(1).reset_index())
     # Does lower confidence line up with choosing to search?

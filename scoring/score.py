@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures as cf
 import glob
 import json
 import sys
@@ -18,7 +19,7 @@ from dotenv import load_dotenv
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as C
 from scoring import rules
-from scoring.judge import CachingJudge
+from scoring.judge import CachingJudge, QuotaExhausted
 
 load_dotenv(C.ROOT / ".env")
 
@@ -47,12 +48,14 @@ def nvd_exists(cve_id: str) -> bool | None:
 def detect_conflict(sig: dict, judged: dict, id_exists: bool) -> bool:
     label = judged.get("label")
     if id_exists:
-        if label == "correct" and (sig["cvss_match"] is None and sig["product_match"] is None
-                                   and sig["parse_ok"] and not sig["declined_shape"]):
-            # judge called it correct but no factual claim matched NVD exactly
-            return True
-        if label == "wrong" and sig["cvss_match"] and sig["product_match"]:
-            return True
+        # product_match no longer gates conflicts: the NVD product/vendor unions
+        # are huge (100s of CPEs) and substring matching is so permissive it
+        # matches almost anything, so it produced neither reliable corroboration
+        # nor reliable contradiction. It stays as a descriptive column only.
+        if label == "correct" and (sig["declined_shape"] or not sig["parse_ok"]):
+            return True  # judge says correct, but the model gave nothing to be correct about
+        if label == "wrong" and sig["cvss_match"]:
+            return True  # judge says wrong, yet the CVSS exactly matches a published NVD score
     else:
         if label == "rejected" and not sig["declined_shape"] and sig["parse_ok"]:
             return True  # "rejected" yet the model filled factual fields
@@ -62,21 +65,50 @@ def detect_conflict(sig: dict, judged: dict, id_exists: bool) -> bool:
 
 
 def load_records(patterns: list[str]) -> list[dict]:
+    """All raw runs, minus failed calls, deduped to one record per cell.
+
+    A resumed sweep re-runs cells whose first attempt failed, so a file can hold
+    both the failed line and its later success for the same
+    (id, model, condition, repeat, thinking_budget). Keep the newest successful
+    line only: scoring a failed call would send the judge an empty answer, and
+    scoring both would double-count the cell in every rate we report.
+    """
     files: list[str] = []
     for p in patterns:
         files.extend(glob.glob(p))
-    recs = []
+    # Dry-run cells share (id, model, condition, repeat=0) with real sweep cells,
+    # so they must not be mixed in unless asked for by name.
+    if not any("dryrun" in p for p in patterns):
+        files = [f for f in files if not Path(f).name.startswith("dryrun_")]
+    by_cell: dict[tuple, dict] = {}
+    total = failed = 0
     for fp in files:
         for line in Path(fp).read_text().splitlines():
-            if line.strip():
-                recs.append(json.loads(line))
-    return recs
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            total += 1
+            if not r.get("ok"):
+                failed += 1
+                continue
+            cell = (r["id"], r["model"], r["condition"], r["repeat"],
+                    r.get("thinking_budget"))
+            prev = by_cell.get(cell)
+            if prev is None or (r.get("ts") or 0) >= (prev.get("ts") or 0):
+                by_cell[cell] = r
+    dropped = total - failed - len(by_cell)
+    if failed or dropped:
+        print(f"  skipped {failed} failed call(s), {dropped} superseded duplicate(s) "
+              f"of {total} raw lines")
+    return list(by_cell.values())
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", nargs="+", default=[str(C.RAW_DIR / "*.jsonl")])
     ap.add_argument("--out", default=str(C.RESULTS / "labels.csv"))
+    ap.add_argument("--workers", type=int, default=8,
+                    help="concurrent judge calls (default 8); each is one network call")
     a = ap.parse_args()
 
     gt_by_id = {it["id"]: it["ground_truth"]
@@ -85,32 +117,78 @@ def main():
     if not records:
         sys.exit(f"no records matched {a.input}")
 
-    judge = CachingJudge()
-    rows = []
-    for i, rec in enumerate(records, 1):
+    judge = CachingJudge(cache_path=C.RESULTS / "judge_cache.jsonl")
+
+    def score_one(rec):
+        """Judge + rule signals for one record. Thread-safe: the judge cache and
+        nvd cache serialize their own writes; everything else here is local."""
         gt = gt_by_id.get(rec["id"], {"exists": False})
         sig = rules.derive_signals(rec, gt)
-        judged = judge.judge(rec, gt)
+        judged = judge.judge(rec, gt)  # may raise QuotaExhausted -> propagates
         hij = judged.get("hijacked_cve")
         hij_exists = nvd_exists(hij) if hij else None
         conflict = detect_conflict(sig, judged, sig["id_exists"])
-        reason = (judged.get("reason") or "").lower()
-        needs_hc = conflict or judged.get("label") == "unsure" or "uncertain" in reason
-        rows.append({
+        reason_raw = judged.get("reason") or ""
+        # A judge FAILURE (API error / unparseable) also surfaces as label "unsure";
+        # tell it apart from a real model decline by its reason text.
+        is_failure = reason_raw.startswith("judge error") or "unparseable" in reason_raw
+        label = judged.get("label")
+        # Relabel a genuine real-ID abstention "unsure" -> "declined" (clearer name;
+        # also normalizes verdicts cached under the old label). Judge failures keep
+        # the "unsure" sentinel so they stay visible.
+        if sig["id_exists"] and label == "unsure" and not is_failure:
+            label = "declined"
+        # needs_handcheck = genuine human-review load only: rule/judge conflicts and
+        # any judge failure. Model declines are a clean, decisive label (the judge
+        # doesn't even need the NVD row for them) and no longer auto-flagged.
+        needs_hc = conflict or is_failure
+        return {
             "id": rec["id"], "category": rec["category"], "model": rec["model"],
             "condition": rec["condition"], "repeat": rec["repeat"],
             "thinking_budget": rec.get("thinking_budget"),
             **sig,
-            "judge_label": judged.get("label"),
+            "judge_label": label,
             "hijacked_cve": hij, "hijacked_cve_exists": hij_exists,
             "retrieval_diagnosis": judged.get("retrieval_diagnosis"),
             "judge_reason": judged.get("reason"),
             "rule_judge_conflict": conflict, "needs_handcheck": needs_hc,
-        })
-        if i % 100 == 0:
-            print(f"  scored {i}/{len(records)} (judge calls: {judge.calls})")
+        }
+
+    rows = []
+    quota_err = None
+    # I/O-bound judge calls -> run them concurrently. Worker threads only call the
+    # network + return a row; the judge cache/file writes are internally locked.
+    with cf.ThreadPoolExecutor(max_workers=max(1, a.workers)) as ex:
+        futs = [ex.submit(score_one, rec) for rec in records]
+        done = 0
+        for fut in cf.as_completed(futs):
+            try:
+                rows.append(fut.result())
+            except QuotaExhausted as e:
+                quota_err = e
+                for f in futs:
+                    f.cancel()  # stop not-yet-started work; in-flight ones finish
+                break
+            done += 1
+            if done % 50 == 0:
+                print(f"  scored {done}/{len(records)} "
+                      f"(new judge calls: {judge.calls}, cache hits: {judge.hits})",
+                      flush=True)
+
+    if quota_err is not None:
+        print(f"\nDAILY JUDGE QUOTA EXHAUSTED for {C.JUDGE_MODEL} "
+              f"after {judge.calls} new call(s) this run.", file=sys.stderr)
+        print(f"{len(judge.cache)} verdict(s) safely cached in "
+              f"{C.RESULTS / 'judge_cache.jsonl'}; labels.csv NOT overwritten.",
+              file=sys.stderr)
+        print("Resume later (higher tier or after the quota resets) -- cached "
+              "verdicts are reused for free.", file=sys.stderr)
+        print(f"  detail: {str(quota_err)[:200]}", file=sys.stderr)
+        sys.exit(2)
 
     df = pd.DataFrame(rows)
+    if not df.empty:  # as_completed returns out of order -> stable sort for a clean CSV
+        df = df.sort_values(["model", "condition", "id", "repeat"]).reset_index(drop=True)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(a.out, index=False)
     print(f"\nWrote {len(df)} rows -> {a.out}")

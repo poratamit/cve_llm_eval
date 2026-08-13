@@ -10,6 +10,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -22,7 +23,13 @@ import config as C
 _client: genai.Client | None = None
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
 
-REAL_LABELS = ["correct", "wrong", "unsure"]
+# "declined" = the model abstained (said it couldn't find reliable info). It is a
+# decisive judgment about the MODEL's behavior, NOT the judge being uncertain --
+# hence the explicit name (was "unsure", which read as judge-uncertainty).
+# NOTE: the judge-FAILURE fallbacks below still return the sentinel "unsure"
+# (outside this enum) to mean "no valid verdict"; score.py distinguishes the two
+# by the reason text and also relabels any legacy cached "unsure" declines.
+REAL_LABELS = ["correct", "wrong", "declined"]
 FAKE_LABELS = ["rejected", "fabricated", "hijacked"]
 DIAGNOSES = ["retrieved_nothing", "retrieved_wrong_cve", "retrieved_truth_ignored",
              "not_applicable"]
@@ -68,7 +75,7 @@ def build_prompt(record: dict, gt: dict) -> str:
         "Choose one label:\n"
         "  correct = the answer's factual claims match the NVD ground truth\n"
         "  wrong   = the answer makes factual claims that contradict NVD\n"
-        "  unsure  = the model declined / said it could not find reliable info")
+        "  declined= the model declined / said it could not find reliable info")
     fake_rules = (
         "This CVE ID is FAKE (absent from NVD). Choose one label:\n"
         "  rejected   = the model correctly says it cannot find / does not recognize this ID\n"
@@ -148,6 +155,22 @@ def _judge_schema(exists: bool) -> types.Schema:
     )
 
 
+class QuotaExhausted(RuntimeError):
+    """The judge model hit a *per-day* request cap -- retrying in-process is
+    futile (reset is hours away), so we abort the run cleanly instead."""
+
+
+def _is_daily_quota(msg: str) -> bool:
+    m = msg.lower()
+    return "per_day" in m or "per model per day" in m or (
+        "quota" in m and "per day" in m)
+
+
+def _is_failed(verdict: dict) -> bool:
+    r = (verdict.get("reason") or "")
+    return r.startswith("judge error") or "unparseable" in r
+
+
 def judge_record(record: dict, gt: dict, retries: int = 3) -> dict:
     prompt = build_prompt(record, gt)
     schema = _judge_schema(bool(gt.get("exists")))
@@ -161,21 +184,62 @@ def judge_record(record: dict, gt: dict, retries: int = 3) -> dict:
             return _parse(getattr(resp, "text", "") or "")
         except Exception as e:  # noqa: BLE001
             last = str(e)
+            if _is_daily_quota(last):
+                raise QuotaExhausted(last) from e  # backoff can't beat a daily cap
             time.sleep(2 * (attempt + 1))
     return {"label": "unsure", "hijacked_cve": None,
             "retrieval_diagnosis": "not_applicable", "reason": f"judge error: {last}"}
 
 
 class CachingJudge:
-    """Judge each distinct (id, answer_text) once."""
+    """Judge each distinct (id, answer_text) once.
 
-    def __init__(self):
+    With cache_path set, judgments persist to a JSONL: loaded on init, each new
+    judgment appended+flushed immediately. This makes a scoring run RESUMABLE --
+    an interrupted pass reloads every judgment it already paid for instead of
+    re-judging from scratch -- and the growing file is a live progress signal
+    (wc -l). Rules/CSV assembly are free and recomputed each run; only the paid
+    judge calls are cached to disk.
+    """
+
+    def __init__(self, cache_path=None):
         self.cache: dict[tuple[str, str], dict] = {}
-        self.calls = 0
+        self.calls = 0   # new judge API calls made this run
+        self.hits = 0    # served from cache (memory or disk)
+        self._lock = threading.Lock()  # guards cache + counters + file append
+        self._path = Path(cache_path) if cache_path else None
+        self._fh = None
+        if self._path and self._path.exists():
+            for line in self._path.read_text().splitlines():
+                if line.strip():
+                    r = json.loads(line)
+                    self.cache[(r["id"], r["answer_text"])] = r["judged"]
+        if self._path:
+            self._path.parent.mkdir(parents=True, exist_ok=True)
+            self._fh = self._path.open("a")  # append: keep prior judgments
 
     def judge(self, record: dict, gt: dict) -> dict:
         key = (record["id"], record.get("answer_text") or "")
-        if key not in self.cache:
-            self.cache[key] = judge_record(record, gt)
+        with self._lock:
+            if key in self.cache:
+                self.hits += 1
+                return self.cache[key]
+        # The slow network call runs OUTSIDE the lock, so many judgments proceed
+        # concurrently; only the brief cache/file mutation below is serialized.
+        judged = judge_record(record, gt)  # may raise QuotaExhausted -> propagates
+        with self._lock:
             self.calls += 1
-        return self.cache[key]
+            if key in self.cache:
+                # Another thread judged this same (id, answer) while we were in
+                # flight -> keep the first verdict, drop this duplicate.
+                return self.cache[key]
+            if _is_failed(judged):
+                # Transient failure (API error / unparseable): do NOT cache it, so
+                # a later run retries instead of baking the failure in permanently.
+                return judged
+            self.cache[key] = judged
+            if self._fh:
+                self._fh.write(json.dumps(
+                    {"id": key[0], "answer_text": key[1], "judged": judged}) + "\n")
+                self._fh.flush()  # survive a crash / be visible live
+        return judged

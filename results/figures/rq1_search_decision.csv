@@ -1,0 +1,4 @@
+model,n_didnt_know,search_when_needed_%,n_knew,needless_search_%
+gemini-3.1-flash-lite,54,0.0,66,0.0
+gemini-3.5-flash,38,7.9,82,9.8
+gemini-3.5-flash-lite,43,0.0,77,5.2

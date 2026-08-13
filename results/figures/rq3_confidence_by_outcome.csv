@@ -1,0 +1,10 @@
+model,outcome,mean,count
+gemini-3.1-flash-lite,correct,100.0,168
+gemini-3.1-flash-lite,declined,99.9,122
+gemini-3.1-flash-lite,wrong,98.1,70
+gemini-3.5-flash,correct,99.7,265
+gemini-3.5-flash,declined,23.2,84
+gemini-3.5-flash,wrong,75.8,6
+gemini-3.5-flash-lite,correct,98.6,253
+gemini-3.5-flash-lite,declined,98.2,83
+gemini-3.5-flash-lite,wrong,95.9,24

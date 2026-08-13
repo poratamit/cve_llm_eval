@@ -8,3 +8,10 @@ results/raw/
 
 # IntelliJ IDEA IDE config (per-developer, not shared)
 .idea/
+
+# scratch run logs
+scratch_*.log
+# judge verdict cache + backups (local optimization; regenerable, and holds full answers)
+results/judge_cache.jsonl
+results/judge_cache.jsonl.bak
+results/archive/

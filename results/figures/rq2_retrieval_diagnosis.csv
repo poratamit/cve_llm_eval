@@ -1,0 +1,7 @@
+model,retrieval_diagnosis,count
+gemini-3.1-flash-lite,not_applicable,61
+gemini-3.5-flash,not_applicable,21
+gemini-3.5-flash,retrieved_nothing,4
+gemini-3.5-flash,retrieved_wrong_cve,2
+gemini-3.5-flash-lite,not_applicable,34
+gemini-3.5-flash-lite,retrieved_wrong_cve,1
