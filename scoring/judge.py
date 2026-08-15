@@ -1,4 +1,4 @@
-"""LLM-as-judge (gemini-2.5-pro): meaning-based labels only.
+"""LLM-as-judge (config.JUDGE_MODEL, currently gemini-3.7-flash): meaning-based labels only.
 
 The judge classifies the model's answer AGAINST the NVD ground truth we hand it.
 It never decides what is true -- truth is given (NVD). It picks one label from a
@@ -19,6 +19,7 @@ from google.genai import types
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as C
+from harness.gemini_client import _QUOTA_MARKERS
 
 _client: genai.Client | None = None
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
@@ -133,8 +134,9 @@ Return ONLY a JSON object (no fences):
 
 
 def _repair_json(cleaned: str) -> str:
-    """Close an object the judge left unterminated (the pro-preview model
-    sometimes drops the trailing brace even with finish_reason=STOP)."""
+    """Close an object the judge left unterminated. Defensive fallback only:
+    the API-enforced response schema should make this unreachable, but the old
+    pro-preview judge dropped trailing braces even with finish_reason=STOP."""
     s = cleaned
     # If a string literal is left open (odd number of unescaped quotes), close it.
     if s.count('"') % 2 == 1:
@@ -177,14 +179,19 @@ def _judge_schema(exists: bool) -> types.Schema:
 
 
 class QuotaExhausted(RuntimeError):
-    """The judge model hit a *per-day* request cap -- retrying in-process is
-    futile (reset is hours away), so we abort the run cleanly instead."""
+    """The judge hit a quota that retrying in-process cannot fix -- a per-day
+    request cap or a billing/credits limit -- so we abort the run cleanly
+    instead of grinding every record through futile retries."""
 
 
-def _is_daily_quota(msg: str) -> bool:
+def _is_hard_quota(msg: str) -> bool:
+    """Daily-cap 429s (old pro-preview judge) OR billing/credit 429s (the
+    realistic failure for a flash judge on depleted credits). The billing
+    markers are shared with the subject-model client so the two never drift."""
     m = msg.lower()
-    return "per_day" in m or "per model per day" in m or (
-        "quota" in m and "per day" in m)
+    if "per_day" in m or "per model per day" in m or ("quota" in m and "per day" in m):
+        return True
+    return any(marker in m for marker in _QUOTA_MARKERS)
 
 
 def _is_failed(verdict: dict) -> bool:
@@ -205,8 +212,8 @@ def judge_record(record: dict, gt: dict, retries: int = 3) -> dict:
             return _parse(getattr(resp, "text", "") or "")
         except Exception as e:  # noqa: BLE001
             last = str(e)
-            if _is_daily_quota(last):
-                raise QuotaExhausted(last) from e  # backoff can't beat a daily cap
+            if _is_hard_quota(last):
+                raise QuotaExhausted(last) from e  # backoff can't beat a daily/billing cap
             time.sleep(2 * (attempt + 1))
     return {"label": "unsure", "hijacked_cve": None,
             "retrieval_diagnosis": "not_applicable", "reason": f"judge error: {last}"}

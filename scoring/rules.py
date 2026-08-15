@@ -98,11 +98,13 @@ def derive_signals(record: dict, gt: dict) -> dict:
         # count as a rejection, never as fabrication.
         "claimed_reserved": bool(re.search(
             r"\breserv|\bnot\s+(?:yet\s+|currently\s+)?publish", text, re.IGNORECASE)),
-        # Recomputed from the billing-backed signals rather than trusting the
-        # raw line's searched flag: early interactions records also counted
-        # url_citation annotations, which models emit from memory even with no
-        # search tool attached. Falls back to the stored flag for legacy
-        # generateContent records that lack the step fields.
+        # LEGACY-ONLY correction: the current interactions client already sets
+        # the raw searched flag from these same billing-backed signals, so for
+        # fresh runs this recomputation is an identity. It exists to fix EARLY
+        # interactions records whose flag also counted url_citation annotations
+        # (models emit those from memory even with no search tool attached),
+        # and falls back to the stored flag for generateContent records that
+        # lack the step fields. Drop it once pre-fix runs are no longer rescored.
         "searched": (bool(record.get("n_search_calls") or record.get("grounding_tool_count"))
                      if "n_search_calls" in record else bool(record.get("searched"))),
         # Per-signal evidence so their agreement can be audited: explicit

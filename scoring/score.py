@@ -41,7 +41,8 @@ def nvd_exists(cve_id: str) -> bool | None:
         val = r.json().get("totalResults", 0) > 0 if r.status_code == 200 else None
     except Exception:  # noqa: BLE001
         val = None
-    _nvd_cache[cid] = val
+    if val is not None:  # never cache a transient lookup failure
+        _nvd_cache[cid] = val
     return val
 
 
@@ -81,6 +82,11 @@ def load_records(patterns: list[str]) -> list[dict]:
     (id, model, condition, repeat, thinking_budget). Keep the newest successful
     line only: scoring a failed call would send the judge an empty answer, and
     scoring both would double-count the cell in every rate we report.
+
+    Interactions records that ended non-"completed" (truncated / tool failure)
+    are skipped like failed calls: their empty or partial answers would be
+    judged "declined"/"rejected" and pollute those rates with harness
+    artifacts. Legacy generateContent lines lack the field and pass through.
     """
     files: list[str] = []
     for p in patterns:
@@ -90,7 +96,7 @@ def load_records(patterns: list[str]) -> list[dict]:
     if not any("dryrun" in p for p in patterns):
         files = [f for f in files if not Path(f).name.startswith("dryrun_")]
     by_cell: dict[tuple, dict] = {}
-    total = failed = 0
+    total = failed = non_completed = 0
     for fp in files:
         for line in Path(fp).read_text().splitlines():
             if not line.strip():
@@ -100,15 +106,18 @@ def load_records(patterns: list[str]) -> list[dict]:
             if not r.get("ok"):
                 failed += 1
                 continue
+            if r.get("interaction_status") not in (None, "completed"):
+                non_completed += 1
+                continue
             cell = (r["id"], r["model"], r["condition"], r["repeat"],
                     r.get("thinking_budget"))
             prev = by_cell.get(cell)
             if prev is None or (r.get("ts") or 0) >= (prev.get("ts") or 0):
                 by_cell[cell] = r
-    dropped = total - failed - len(by_cell)
-    if failed or dropped:
-        print(f"  skipped {failed} failed call(s), {dropped} superseded duplicate(s) "
-              f"of {total} raw lines")
+    dropped = total - failed - non_completed - len(by_cell)
+    if failed or non_completed or dropped:
+        print(f"  skipped {failed} failed call(s), {non_completed} non-completed "
+              f"interaction(s), {dropped} superseded duplicate(s) of {total} raw lines")
     return list(by_cell.values())
 
 
@@ -153,8 +162,9 @@ def main():
         nvd cache serialize their own writes; everything else here is local."""
         gt = gt_by_id.get(rec["id"], {"exists": False})
         sig = rules.derive_signals(rec, gt)
-        # Hand the judge the recomputed searched flag (rules corrects raw lines
-        # whose flag counted memory-recalled citations as search evidence).
+        # Hand the judge the recomputed searched flag. For current interactions
+        # records this equals the raw flag (the client already excludes
+        # citations); it only corrects legacy lines -- see rules.derive_signals.
         judged = judge.judge({**rec, "searched": sig["searched"]}, gt)  # may raise QuotaExhausted
         hij = judged.get("hijacked_cve")
         hij_exists = nvd_exists(hij) if hij else None
@@ -207,8 +217,9 @@ def main():
                       flush=True)
 
     if quota_err is not None:
-        print(f"\nDAILY JUDGE QUOTA EXHAUSTED for {C.JUDGE_MODEL} "
-              f"after {judge.calls} new call(s) this run.", file=sys.stderr)
+        print(f"\nJUDGE QUOTA EXHAUSTED (daily cap or billing/credits) for "
+              f"{C.JUDGE_MODEL} after {judge.calls} new call(s) this run.",
+              file=sys.stderr)
         print(f"{len(judge.cache)} verdict(s) safely cached in "
               f"{rd / f'judge_cache_{C.JUDGE_MODEL}.jsonl'}; labels.csv NOT overwritten.",
               file=sys.stderr)
