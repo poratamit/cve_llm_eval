@@ -1,4 +1,4 @@
-"""Merge raw runs + rule signals + judge labels -> results/labels.csv.
+"""Merge raw runs + rule signals + judge labels -> the run's labels.csv.
 
   python scoring/score.py                       # score everything in results/raw/
   python scoring/score.py --input results/raw/dryrun*   # just the dry run
@@ -41,7 +41,8 @@ def nvd_exists(cve_id: str) -> bool | None:
         val = r.json().get("totalResults", 0) > 0 if r.status_code == 200 else None
     except Exception:  # noqa: BLE001
         val = None
-    _nvd_cache[cid] = val
+    if val is not None:  # never cache a transient lookup failure
+        _nvd_cache[cid] = val
     return val
 
 
@@ -57,8 +58,17 @@ def detect_conflict(sig: dict, judged: dict, id_exists: bool) -> bool:
         if label == "wrong" and sig["cvss_match"]:
             return True  # judge says wrong, yet the CVSS exactly matches a published NVD score
     else:
-        if label == "rejected" and not sig["declined_shape"] and sig["parse_ok"]:
-            return True  # "rejected" yet the model filled factual fields
+        if (label in ("fabricated", "hijacked") and sig["claimed_reserved"]
+                and sig.get("registry_state") in ("RESERVED", "REJECTED")
+                and not sig["claimed_details"]):
+            # The model reported a genuinely-reserved ID as reserved with no
+            # substantive details -- that is accurate, not fabrication.
+            return True
+        if label == "rejected" and sig["claimed_details"] and sig["parse_ok"]:
+            # "rejected" yet the model asserted SUBSTANTIVE vuln details
+            # (cvss/severity/products). A mitigation note alone is part of a normal
+            # rejection ("verify the identifier") and no longer counts here.
+            return True
         if label in ("fabricated", "hijacked") and sig["declined_shape"]:
             return True  # "fabricated" yet the model declined to fill anything
     return False
@@ -72,6 +82,11 @@ def load_records(patterns: list[str]) -> list[dict]:
     (id, model, condition, repeat, thinking_budget). Keep the newest successful
     line only: scoring a failed call would send the judge an empty answer, and
     scoring both would double-count the cell in every rate we report.
+
+    Interactions records that ended non-"completed" (truncated / tool failure)
+    are skipped like failed calls: their empty or partial answers would be
+    judged "declined"/"rejected" and pollute those rates with harness
+    artifacts. Legacy generateContent lines lack the field and pass through.
     """
     files: list[str] = []
     for p in patterns:
@@ -81,7 +96,7 @@ def load_records(patterns: list[str]) -> list[dict]:
     if not any("dryrun" in p for p in patterns):
         files = [f for f in files if not Path(f).name.startswith("dryrun_")]
     by_cell: dict[tuple, dict] = {}
-    total = failed = 0
+    total = failed = non_completed = 0
     for fp in files:
         for line in Path(fp).read_text().splitlines():
             if not line.strip():
@@ -91,25 +106,46 @@ def load_records(patterns: list[str]) -> list[dict]:
             if not r.get("ok"):
                 failed += 1
                 continue
+            if r.get("interaction_status") not in (None, "completed"):
+                non_completed += 1
+                continue
             cell = (r["id"], r["model"], r["condition"], r["repeat"],
                     r.get("thinking_budget"))
             prev = by_cell.get(cell)
             if prev is None or (r.get("ts") or 0) >= (prev.get("ts") or 0):
                 by_cell[cell] = r
-    dropped = total - failed - len(by_cell)
-    if failed or dropped:
-        print(f"  skipped {failed} failed call(s), {dropped} superseded duplicate(s) "
-              f"of {total} raw lines")
+    dropped = total - failed - non_completed - len(by_cell)
+    if failed or non_completed or dropped:
+        print(f"  skipped {failed} failed call(s), {non_completed} non-completed "
+              f"interaction(s), {dropped} superseded duplicate(s) of {total} raw lines")
     return list(by_cell.values())
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", nargs="+", default=[str(C.RAW_DIR / "*.jsonl")])
-    ap.add_argument("--out", default=str(C.RESULTS / "labels.csv"))
+    ap.add_argument("--run", default=None,
+                    help="run id to score (default: the CURRENT run)")
+    ap.add_argument("--input", nargs="+", default=None,
+                    help="raw jsonl glob(s); default: the run's raw/*.jsonl")
+    ap.add_argument("--out", default=None,
+                    help="labels csv path; default: the run's labels.csv")
     ap.add_argument("--workers", type=int, default=8,
                     help="concurrent judge calls (default 8); each is one network call")
     a = ap.parse_args()
+
+    rd = C.resolve_run(a.run)
+    if rd is None:
+        sys.exit("no run found (start one with run_experiment.py) "
+                 "or pass --run <id> / explicit --input + --out")
+    print(f"run: {rd.name}")
+    if a.input is None:
+        # A run is either a dry run or a real one (metadata says which); name
+        # the dryrun files explicitly so load_records doesn't filter them out.
+        meta = json.loads((rd / "metadata.json").read_text()) if (rd / "metadata.json").exists() else {}
+        pat = "dryrun_*.jsonl" if meta.get("dry_run") else "*.jsonl"
+        a.input = [str(rd / "raw" / pat)]
+    if a.out is None:
+        a.out = str(rd / "labels.csv")
 
     gt_by_id = {it["id"]: it["ground_truth"]
                 for it in json.loads(C.DATASET.read_text())["items"]}
@@ -117,14 +153,19 @@ def main():
     if not records:
         sys.exit(f"no records matched {a.input}")
 
-    judge = CachingJudge(cache_path=C.RESULTS / "judge_cache.jsonl")
+    # Cache file is per run AND per judge model: verdicts from different
+    # judges must never be interchanged (the cache key is only (id, answer_text)).
+    judge = CachingJudge(cache_path=rd / f"judge_cache_{C.JUDGE_MODEL}.jsonl")
 
     def score_one(rec):
         """Judge + rule signals for one record. Thread-safe: the judge cache and
         nvd cache serialize their own writes; everything else here is local."""
         gt = gt_by_id.get(rec["id"], {"exists": False})
         sig = rules.derive_signals(rec, gt)
-        judged = judge.judge(rec, gt)  # may raise QuotaExhausted -> propagates
+        # Hand the judge the recomputed searched flag. For current interactions
+        # records this equals the raw flag (the client already excludes
+        # citations); it only corrects legacy lines -- see rules.derive_signals.
+        judged = judge.judge({**rec, "searched": sig["searched"]}, gt)  # may raise QuotaExhausted
         hij = judged.get("hijacked_cve")
         hij_exists = nvd_exists(hij) if hij else None
         conflict = detect_conflict(sig, judged, sig["id_exists"])
@@ -176,10 +217,11 @@ def main():
                       flush=True)
 
     if quota_err is not None:
-        print(f"\nDAILY JUDGE QUOTA EXHAUSTED for {C.JUDGE_MODEL} "
-              f"after {judge.calls} new call(s) this run.", file=sys.stderr)
+        print(f"\nJUDGE QUOTA EXHAUSTED (daily cap or billing/credits) for "
+              f"{C.JUDGE_MODEL} after {judge.calls} new call(s) this run.",
+              file=sys.stderr)
         print(f"{len(judge.cache)} verdict(s) safely cached in "
-              f"{C.RESULTS / 'judge_cache.jsonl'}; labels.csv NOT overwritten.",
+              f"{rd / f'judge_cache_{C.JUDGE_MODEL}.jsonl'}; labels.csv NOT overwritten.",
               file=sys.stderr)
         print("Resume later (higher tier or after the quota resets) -- cached "
               "verdicts are reused for free.", file=sys.stderr)

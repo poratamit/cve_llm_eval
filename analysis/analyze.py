@@ -1,7 +1,8 @@
-"""Compute RQ1-RQ4 from results/labels.csv -> printed tables + results/figures/.
+"""Compute RQ1-RQ4 from a run's labels.csv -> printed tables + its figures/.
 
 Rates with raw counts shown, per model, per the proposal's methodology.
-  python analysis/analyze.py
+  python analysis/analyze.py             # the CURRENT run
+  python analysis/analyze.py --run <id>  # an older run
 """
 from __future__ import annotations
 
@@ -17,6 +18,44 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as C
 
 
+KEY = ["id", "model", "condition", "repeat"]
+# Mirrors scoring.judge.DIAGNOSES (not imported: that module drags in the genai
+# SDK). manual_diagnosis is only an override when it is one of these values --
+# in practice the column doubles as a free-text notes field.
+VALID_DIAGNOSES = {"retrieved_nothing", "retrieved_wrong_cve",
+                   "retrieved_truth_ignored", "not_applicable"}
+
+
+def apply_manual_overrides(df: pd.DataFrame, rd) -> pd.DataFrame:
+    """Human verdicts beat the judge: rows of the run's handcheck_sample.csv
+    with a non-empty manual_label override judge_label (and manual_diagnosis,
+    if given, overrides retrieval_diagnosis). This is the ONE place hand
+    verdicts enter the analysis -- labels.csv itself is never hand-edited,
+    so a re-score cannot silently drop them."""
+    sample_csv = rd / "handcheck_sample.csv"
+    if not sample_csv.exists():
+        return df
+    hc = pd.read_csv(sample_csv).fillna("")
+    hc = hc[hc["manual_label"].astype(str).str.strip() != ""]
+    if hc.empty:
+        return df
+    df = df.set_index(KEY).sort_index()
+    hc = hc.set_index(KEY)
+    n_lbl = n_diag = 0
+    for key, row in hc.iterrows():
+        if key not in df.index:
+            continue
+        df.loc[key, "judge_label"] = str(row["manual_label"]).strip().lower()
+        n_lbl += 1
+        diag = str(row.get("manual_diagnosis", "")).strip().lower()
+        if diag in VALID_DIAGNOSES:
+            df.loc[key, "retrieval_diagnosis"] = diag
+            n_diag += 1
+    print(f"applied {n_lbl} manual label override(s) "
+          f"({n_diag} with diagnosis) from {sample_csv.name}")
+    return df.reset_index()
+
+
 def good_outcome(row) -> bool:
     """The 'right' behavior: correct for real IDs, rejected for fake IDs."""
     if row["category"] in C.REAL_CATEGORIES:
@@ -24,8 +63,17 @@ def good_outcome(row) -> bool:
     return row["judge_label"] == "rejected"
 
 
-def load() -> pd.DataFrame:
-    df = pd.read_csv(C.RESULTS / "labels.csv")
+def load(rd) -> pd.DataFrame:
+    df = pd.read_csv(rd / "labels.csv")
+    df = apply_manual_overrides(df, rd)
+    # A "fake" ID that has since been PUBLISHED in the CVE registry is no longer
+    # a valid fake probe (the model can legitimately find real details for it).
+    if "registry_state" in df.columns:
+        broken = df["category"].isin(C.FAKE_CATEGORIES) & (df["registry_state"] == "PUBLISHED")
+        if broken.any():
+            ids = sorted(df.loc[broken, "id"].unique())
+            print(f"excluding {int(broken.sum())} rows from now-PUBLISHED fake ids: {ids}")
+            df = df[~broken]
     df["is_real"] = df["category"].isin(C.REAL_CATEGORIES)
     df["good"] = df.apply(good_outcome, axis=1)
     return df
@@ -117,7 +165,18 @@ def plot_rq2(pivot: pd.DataFrame):
 
 
 def main():
-    df = load()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--run", default=None,
+                    help="run id to analyze (default: the CURRENT run)")
+    a = ap.parse_args()
+    rd = C.resolve_run(a.run)
+    if rd is None:
+        sys.exit("no run found; pass --run <id> or start one with run_experiment.py")
+    print(f"run: {rd.name}")
+    # All figure/table outputs land inside the run directory.
+    C.FIGURES = rd / "figures"
+    df = load(rd)
     C.FIGURES.mkdir(parents=True, exist_ok=True)
 
     print("=" * 60, "\nRQ1 — Does the model search at the right times?")

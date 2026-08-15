@@ -26,11 +26,13 @@ MODELS = [
 # The judge never decides truth (NVD does), only interprets language against the
 # ground truth we hand it. Requirements: (1) DISJOINT from the subject set above
 # -- a subject grading its own answers is self-evaluation bias -- and (2) enough
-# daily throughput for ~2,160 calls. gemini-3.6-flash satisfies both: it is not a
-# subject, it is newer/stronger than every subject (grades "down" the capability
-# ladder), and being GA (not -preview) it carries the normal high flash RPD rather
-# than the preview-Pro 250 requests/day cap that blocked gemini-3.1-pro-preview.
-JUDGE_MODEL = "gemini-3.6-flash"
+# daily throughput for ~2,160 calls. gemini-3.7-flash (GA 2026-08-14) satisfies
+# both: it is not a subject, it is newer/stronger than every subject (grades
+# "down" the capability ladder), and as a GA flash model it carries the normal
+# high flash RPD rather than the preview-Pro 250 requests/day cap that blocked
+# gemini-3.1-pro-preview. (Swapped from gemini-3.6-flash on the interactions-api
+# branch; judge caches are per-model, so verdicts never mix across judges.)
+JUDGE_MODEL = "gemini-3.7-flash"
 
 CONDITIONS = ["off", "on"]      # search disabled / model may search
 REPEATS = 3
@@ -47,7 +49,8 @@ PRICES = {
     "gemini-3.1-flash-lite": (0.25, 1.50),
     "gemini-3.5-flash-lite": (0.10, 0.40),
     "gemini-3.5-flash":      (0.30, 2.50),
-    "gemini-3.6-flash":      (0.30, 2.50),   # judge; flash-tier, advisory only
+    "gemini-3.6-flash":      (0.30, 2.50),   # former judge; flash-tier, advisory only
+    "gemini-3.7-flash":      (0.30, 2.50),   # judge; flash-tier, advisory only
     "gemini-3.1-pro-preview": (1.25, 10.00),
 }
 # Grounded-search prices per 1k grounded prompts, after the free tier.
@@ -71,3 +74,69 @@ Return ONLY a JSON object (no markdown fences) with exactly these keys:
   "notes": string - any caveats, context, or limitations
   "confidence_0_100": integer - your overall confidence in this answer
 """
+
+# ---------------------------------------------------------------- runs
+# Every experiment execution lives in its own results/runs/<uuid>/ directory:
+# metadata.json, raw/*.jsonl, judge_cache_<judge>.jsonl, labels.csv, figures/.
+# results/runs/CURRENT holds the id of the active run; run_experiment.py
+# --new-run rotates it. Scripts accept --run <id> to address an older run.
+RUNS_DIR = RESULTS / "runs"
+CURRENT_RUN_FILE = RUNS_DIR / "CURRENT"
+
+
+def run_dir(run_id: str):
+    return RUNS_DIR / run_id
+
+
+def current_run_id():
+    if CURRENT_RUN_FILE.exists():
+        rid = CURRENT_RUN_FILE.read_text().strip()
+        return rid or None
+    return None
+
+
+def new_run(note: str = "", **extra) -> str:
+    """Create a fresh run directory + metadata.json and make it CURRENT."""
+    import json as _json
+    import subprocess
+    import time as _time
+    import uuid
+
+    rid = uuid.uuid4().hex[:12]
+    rd = run_dir(rid)
+    (rd / "raw").mkdir(parents=True)
+    (rd / "figures").mkdir()
+
+    def _git(*args):
+        try:
+            return subprocess.run(["git", *args], cwd=ROOT, capture_output=True,
+                                  text=True, timeout=10).stdout.strip() or None
+        except Exception:
+            return None
+
+    meta = {
+        "run_id": rid,
+        "created": _time.strftime("%Y-%m-%dT%H:%M:%SZ", _time.gmtime()),
+        "git_branch": _git("branch", "--show-current"),
+        "git_commit": _git("rev-parse", "--short", "HEAD"),
+        "api": "interactions",
+        "models": MODELS,
+        "conditions": CONDITIONS,
+        "repeats": REPEATS,
+        "judge_model": JUDGE_MODEL,
+        "dataset": str(DATASET.relative_to(ROOT)),
+        "note": note,
+        **extra,
+    }
+    (rd / "metadata.json").write_text(_json.dumps(meta, indent=2) + "\n")
+    CURRENT_RUN_FILE.write_text(rid + "\n")
+    return rid
+
+
+def resolve_run(run_id=None):
+    """Directory of the requested (or current) run; None if neither exists."""
+    rid = run_id or current_run_id()
+    if rid is None:
+        return None
+    rd = run_dir(rid)
+    return rd if rd.exists() else None

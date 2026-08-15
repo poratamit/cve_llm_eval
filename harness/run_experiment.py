@@ -42,9 +42,9 @@ def dry_run_items(items: list[dict]) -> list[dict]:
     return picked
 
 
-def out_path(model: str, condition: str, dry: bool) -> Path:
+def out_path(raw_dir: Path, model: str, condition: str, dry: bool) -> Path:
     tag = "dryrun_" if dry else ""
-    return C.RAW_DIR / f"{tag}{model}_{condition}.jsonl"
+    return raw_dir / f"{tag}{model}_{condition}.jsonl"
 
 
 def done_keys(path: Path) -> set[tuple[str, int]]:
@@ -65,8 +65,9 @@ def done_keys(path: Path) -> set[tuple[str, int]]:
     return keys
 
 
-def run(models, conditions, repeats, dry, thinking_budget, tb_tag, workers):
-    C.RAW_DIR.mkdir(parents=True, exist_ok=True)
+def run(run_rd, models, conditions, repeats, dry, thinking_budget, tb_tag, workers):
+    raw_dir = run_rd / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
     items = dry_run_items(load_items()) if dry else load_items()
     prices = C.PRICES
     grand_spend = 0.0
@@ -76,7 +77,7 @@ def run(models, conditions, repeats, dry, thinking_budget, tb_tag, workers):
         in_price, out_price = prices.get(model, (0.0, 0.0))
         for condition in conditions:
             search_enabled = condition == "on"
-            path = out_path(model, condition, dry)
+            path = out_path(raw_dir, model, condition, dry)
             if tb_tag:  # RQ4: separate file per thinking level
                 path = path.with_name(path.stem + f"_tb{tb_tag}.jsonl")
             already = done_keys(path)
@@ -102,11 +103,20 @@ def run(models, conditions, repeats, dry, thinking_budget, tb_tag, workers):
                 }
                 return it, rep, rec, res
 
+            quota_err = None
             with path.open("a") as f, \
                     cf.ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
                 futs = [ex.submit(work, task) for task in pending]
                 for fut in cf.as_completed(futs):
-                    it, rep, rec, res = fut.result()
+                    try:
+                        it, rep, rec, res = fut.result()
+                    except gc.QuotaExhausted as e:
+                        # Daily quota / billing exhaustion: abort instead of
+                        # hammering the remaining calls x retries into it.
+                        quota_err = e
+                        for f2 in futs:
+                            f2.cancel()  # unstarted work; in-flight ones finish
+                        break
                     f.write(json.dumps(rec) + "\n"); f.flush()
                     calls += 1
                     u = res.get("usage") or {}
@@ -116,6 +126,13 @@ def run(models, conditions, repeats, dry, thinking_budget, tb_tag, workers):
                         grounded += 1
                     if not res["ok"]:
                         print(f"  ! error {it['id']} rep{rep}: {res['error']}", file=sys.stderr)
+            if quota_err is not None:
+                print(f"\nQUOTA EXHAUSTED during [{model} / search {condition}] "
+                      f"after {calls} call(s): {str(quota_err)[:200]}", file=sys.stderr)
+                print(f"Run is resumable: re-invoke with the same run "
+                      f"({run_rd.name}) once the quota resets; completed "
+                      f"(item, repeat) cells are skipped.", file=sys.stderr)
+                sys.exit(2)
             tok_cost = (tokens_in * in_price + tokens_out * out_price) / 1e6
             gp = C.GROUNDING_PRICE_PER_1K.get(model, 0.0)
             ground_cost_worst = grounded / 1000 * gp
@@ -140,10 +157,25 @@ def main():
                     help="RQ4: e.g. 0 (low) vs a high value; writes a separate _tb file")
     ap.add_argument("--workers", type=int, default=8,
                     help="concurrent API calls per (model, condition) batch (default 8)")
+    ap.add_argument("--run", default=None,
+                    help="run id to resume (default: the CURRENT run)")
+    ap.add_argument("--new-run", action="store_true",
+                    help="start a fresh run directory and make it CURRENT")
+    ap.add_argument("--note", default="", help="free-text note stored in run metadata")
     a = ap.parse_args()
     repeats = a.repeats if a.repeats is not None else (1 if a.dry_run else C.REPEATS)
     tb_tag = "" if a.thinking_budget is None else str(a.thinking_budget)
-    run(a.models, a.conditions, repeats, a.dry_run, a.thinking_budget, tb_tag, a.workers)
+
+    if a.new_run and a.run:
+        sys.exit("--new-run and --run are mutually exclusive")
+    if a.new_run or C.resolve_run(a.run) is None:
+        rid = C.new_run(a.note, dry_run=a.dry_run)
+        print(f"new run {rid} -> {C.run_dir(rid)}")
+    rd = C.resolve_run(a.run)
+    if rd is None:
+        sys.exit(f"run not found: {a.run}")
+    print(f"run: {rd.name}")
+    run(rd, a.models, a.conditions, repeats, a.dry_run, a.thinking_budget, tb_tag, a.workers)
 
 
 if __name__ == "__main__":
