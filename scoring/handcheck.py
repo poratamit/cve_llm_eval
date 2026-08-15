@@ -8,11 +8,13 @@
 Operates on the CURRENT run's labels.csv (or --run ID), same as score.py
 and analyze.py -- NOT the stale top-level results/labels.csv.
 
-Sampling targets ~15-20% overall, but force-includes every flagged row
-(needs_handcheck = rule/judge conflicts + any judge failure) and over-samples
-the hardest subset: fake IDs answered with search on (the three-way retrieval
-diagnosis). Model declines ("declined") are a clean label and stratified like
-any other, not force-included.
+Sized for one person: --budget N rows total (default 40, ~20-30 min).
+Every flagged row (needs_handcheck = rule/judge conflicts + judge failures)
+is force-included; ~60% of the remaining budget samples the hardest subset
+(fake IDs not rejected under search-on, which carry the three-way retrieval
+diagnosis, spread across models) and the rest is a thin stratified slice of
+everything else. Model declines ("declined") are a clean label and stratified
+like any other, not force-included.
 """
 from __future__ import annotations
 
@@ -26,7 +28,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as C
 
 SEED = 20260717
-FRACTION = 0.18
+BUDGET = 40          # total rows to hand-check (approximate; forced rows always kept)
+HARD_SHARE = 0.6     # share of the post-forced budget spent on the hard subset
 
 
 def _paths(run_id):
@@ -37,27 +40,38 @@ def _paths(run_id):
     return rd / "labels.csv", rd / "handcheck_sample.csv"
 
 
-def export(labels_csv, sample_csv):
+def _proportional(pool: pd.DataFrame, n: int, by: list[str]) -> pd.DataFrame:
+    """~n rows from pool, allocated proportionally across `by` groups.
+    Iterate the groups rather than groupby.apply: pandas 3 excludes the
+    grouping columns from the frame passed to apply, which silently blanked
+    category/condition/judge_label on every sampled row (and so blanked the
+    very columns `agreement()` compares)."""
+    if n <= 0 or pool.empty:
+        return pool.iloc[:0]
+    frac = min(1.0, n / len(pool))
+    picks = []
+    for _, g in pool.groupby(by, dropna=False):
+        k = min(len(g), round(len(g) * frac))
+        if k:
+            picks.append(g.sample(n=k, random_state=SEED))
+    return pd.concat(picks) if picks else pool.iloc[:0]
+
+
+def export(labels_csv, sample_csv, budget=BUDGET):
     df = pd.read_csv(labels_csv)
     forced = df[df["needs_handcheck"]]
-    # Over-sample only the genuinely hard subset the proposal targets: fake IDs the
-    # model did NOT reject under search-on -> these are the fabricated/hijacked cases
-    # that carry the three-way retrieval diagnosis. (Taking *all* fake+search-on rows
-    # ballooned the sample to ~43%; rejections are the easy, high-agreement case.)
-    hard = df[(df["category"].isin(C.FAKE_CATEGORIES)) & (df["condition"] == "on")
-              & (~df["judge_label"].isin(["rejected"]))]
-    rest = df.drop(forced.index)
-
-    # ~18% of the rest, stratified by (category, condition, judge_label).
-    # Iterate the groups rather than groupby.apply: pandas 3 excludes the
-    # grouping columns from the frame passed to apply, which silently blanked
-    # category/condition/judge_label on every sampled row (and so blanked the
-    # very columns `agreement()` compares).
-    picks = []
-    for _, g in rest.groupby(["category", "condition", "judge_label"], dropna=False):
-        n = max(1, round(len(g) * FRACTION))
-        picks.append(g.sample(n=min(n, len(g)), random_state=SEED))
-    strat = pd.concat(picks) if picks else rest.iloc[:0]
+    remaining = max(0, budget - len(forced))
+    # The genuinely hard subset the proposal targets: fake IDs the model did
+    # NOT reject under search-on -> the fabricated/hijacked cases that carry
+    # the three-way retrieval diagnosis. Sampled (spread across models), not
+    # taken wholesale -- it alone is bigger than a single person's budget.
+    hard_pool = df[(df["category"].isin(C.FAKE_CATEGORIES)) & (df["condition"] == "on")
+                   & (~df["judge_label"].isin(["rejected"])) ].drop(forced.index, errors="ignore")
+    hard = _proportional(hard_pool, round(remaining * HARD_SHARE), ["model", "judge_label"])
+    # Thin stratified slice of everything else with the leftover budget.
+    rest = df.drop(forced.index).drop(hard_pool.index, errors="ignore")
+    strat = _proportional(rest, remaining - len(hard),
+                          ["category", "condition", "judge_label"])
 
     sample = pd.concat([forced, hard, strat]).drop_duplicates(subset=["id", "model", "condition", "repeat"])
     sample = sample.sample(frac=1.0, random_state=SEED)  # shuffle so labeler is blind to grouping
@@ -102,6 +116,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("mode", nargs="?", default="export", choices=["export", "agreement"])
     ap.add_argument("--run", default=None, help="run id (default: the CURRENT run)")
+    ap.add_argument("--budget", type=int, default=BUDGET,
+                    help=f"approx. total rows to hand-check (default {BUDGET})")
     a = ap.parse_args()
     labels_csv, sample_csv = _paths(a.run)
-    export(labels_csv, sample_csv) if a.mode == "export" else agreement(sample_csv)
+    export(labels_csv, sample_csv, a.budget) if a.mode == "export" else agreement(sample_csv)

@@ -19,6 +19,11 @@ import config as C
 
 
 KEY = ["id", "model", "condition", "repeat"]
+# Mirrors scoring.judge.DIAGNOSES (not imported: that module drags in the genai
+# SDK). manual_diagnosis is only an override when it is one of these values --
+# in practice the column doubles as a free-text notes field.
+VALID_DIAGNOSES = {"retrieved_nothing", "retrieved_wrong_cve",
+                   "retrieved_truth_ignored", "not_applicable"}
 
 
 def apply_manual_overrides(df: pd.DataFrame, rd) -> pd.DataFrame:
@@ -34,7 +39,7 @@ def apply_manual_overrides(df: pd.DataFrame, rd) -> pd.DataFrame:
     hc = hc[hc["manual_label"].astype(str).str.strip() != ""]
     if hc.empty:
         return df
-    df = df.set_index(KEY)
+    df = df.set_index(KEY).sort_index()
     hc = hc.set_index(KEY)
     n_lbl = n_diag = 0
     for key, row in hc.iterrows():
@@ -43,7 +48,7 @@ def apply_manual_overrides(df: pd.DataFrame, rd) -> pd.DataFrame:
         df.loc[key, "judge_label"] = str(row["manual_label"]).strip().lower()
         n_lbl += 1
         diag = str(row.get("manual_diagnosis", "")).strip().lower()
-        if diag:
+        if diag in VALID_DIAGNOSES:
             df.loc[key, "retrieval_diagnosis"] = diag
             n_diag += 1
     print(f"applied {n_lbl} manual label override(s) "

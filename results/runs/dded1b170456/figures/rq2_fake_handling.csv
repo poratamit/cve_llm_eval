@@ -1,0 +1,7 @@
+model,condition,fabricated,hijacked,rejected
+gemini-3.1-flash-lite,off,24.3,8.5,67.2
+gemini-3.1-flash-lite,on,24.3,7.3,68.4
+gemini-3.5-flash,off,6.2,8.5,85.3
+gemini-3.5-flash,on,0.6,10.2,89.3
+gemini-3.5-flash-lite,off,7.9,6.2,85.9
+gemini-3.5-flash-lite,on,1.7,10.7,87.6
