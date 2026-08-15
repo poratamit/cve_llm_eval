@@ -1,4 +1,4 @@
-"""Merge raw runs + rule signals + judge labels -> results/labels.csv.
+"""Merge raw runs + rule signals + judge labels -> the run's labels.csv.
 
   python scoring/score.py                       # score everything in results/raw/
   python scoring/score.py --input results/raw/dryrun*   # just the dry run

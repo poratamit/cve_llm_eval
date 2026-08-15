@@ -1,9 +1,12 @@
 """Human validation of the auto-labels (proposal step 4).
 
-  export:    python scoring/handcheck.py export
-             -> results/handcheck_sample.csv  (fill in manual_label / manual_diagnosis)
-  agreement: python scoring/handcheck.py agreement
+  export:    python scoring/handcheck.py export [--run ID]
+             -> <run>/handcheck_sample.csv  (fill in manual_label / manual_diagnosis)
+  agreement: python scoring/handcheck.py agreement [--run ID]
              -> prints % agreement between judge and your manual labels
+
+Operates on the CURRENT run's labels.csv (or --run ID), same as score.py
+and analyze.py -- NOT the stale top-level results/labels.csv.
 
 Sampling targets ~15-20% overall, but force-includes every flagged row
 (needs_handcheck = rule/judge conflicts + any judge failure) and over-samples
@@ -13,6 +16,7 @@ any other, not force-included.
 """
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -21,14 +25,20 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as C
 
-LABELS_CSV = C.RESULTS / "labels.csv"
-SAMPLE_CSV = C.RESULTS / "handcheck_sample.csv"
 SEED = 20260717
 FRACTION = 0.18
 
 
-def export():
-    df = pd.read_csv(LABELS_CSV)
+def _paths(run_id):
+    rd = C.resolve_run(run_id)
+    if rd is None:
+        sys.exit("no run found (start one with run_experiment.py) or pass --run <id>")
+    print(f"run: {rd.name}")
+    return rd / "labels.csv", rd / "handcheck_sample.csv"
+
+
+def export(labels_csv, sample_csv):
+    df = pd.read_csv(labels_csv)
     forced = df[df["needs_handcheck"]]
     # Over-sample only the genuinely hard subset the proposal targets: fake IDs the
     # model did NOT reject under search-on -> these are the fabricated/hijacked cases
@@ -56,15 +66,15 @@ def export():
     cols = ["id", "category", "model", "condition", "repeat", "searched",
             "judge_label", "retrieval_diagnosis", "judge_reason",
             "rule_judge_conflict", "manual_label", "manual_diagnosis"]
-    sample[cols].to_csv(SAMPLE_CSV, index=False)
+    sample[cols].to_csv(sample_csv, index=False)
     pct = 100 * len(sample) / len(df)
-    print(f"Wrote {len(sample)} rows ({pct:.0f}% of {len(df)}) -> {SAMPLE_CSV}")
+    print(f"Wrote {len(sample)} rows ({pct:.0f}% of {len(df)}) -> {sample_csv}")
     print("Fill in manual_label (and manual_diagnosis for fake+search rows), then:")
     print("  python scoring/handcheck.py agreement")
 
 
-def agreement():
-    df = pd.read_csv(SAMPLE_CSV).fillna("")
+def agreement(sample_csv):
+    df = pd.read_csv(sample_csv).fillna("")
     labeled = df[df["manual_label"].astype(str).str.strip() != ""]
     if labeled.empty:
         sys.exit("No manual_label filled in yet.")
@@ -89,5 +99,9 @@ def agreement():
 
 
 if __name__ == "__main__":
-    mode = sys.argv[1] if len(sys.argv) > 1 else "export"
-    export() if mode == "export" else agreement()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("mode", nargs="?", default="export", choices=["export", "agreement"])
+    ap.add_argument("--run", default=None, help="run id (default: the CURRENT run)")
+    a = ap.parse_args()
+    labels_csv, sample_csv = _paths(a.run)
+    export(labels_csv, sample_csv) if a.mode == "export" else agreement(sample_csv)

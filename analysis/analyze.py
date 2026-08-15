@@ -18,6 +18,39 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config as C
 
 
+KEY = ["id", "model", "condition", "repeat"]
+
+
+def apply_manual_overrides(df: pd.DataFrame, rd) -> pd.DataFrame:
+    """Human verdicts beat the judge: rows of the run's handcheck_sample.csv
+    with a non-empty manual_label override judge_label (and manual_diagnosis,
+    if given, overrides retrieval_diagnosis). This is the ONE place hand
+    verdicts enter the analysis -- labels.csv itself is never hand-edited,
+    so a re-score cannot silently drop them."""
+    sample_csv = rd / "handcheck_sample.csv"
+    if not sample_csv.exists():
+        return df
+    hc = pd.read_csv(sample_csv).fillna("")
+    hc = hc[hc["manual_label"].astype(str).str.strip() != ""]
+    if hc.empty:
+        return df
+    df = df.set_index(KEY)
+    hc = hc.set_index(KEY)
+    n_lbl = n_diag = 0
+    for key, row in hc.iterrows():
+        if key not in df.index:
+            continue
+        df.loc[key, "judge_label"] = str(row["manual_label"]).strip().lower()
+        n_lbl += 1
+        diag = str(row.get("manual_diagnosis", "")).strip().lower()
+        if diag:
+            df.loc[key, "retrieval_diagnosis"] = diag
+            n_diag += 1
+    print(f"applied {n_lbl} manual label override(s) "
+          f"({n_diag} with diagnosis) from {sample_csv.name}")
+    return df.reset_index()
+
+
 def good_outcome(row) -> bool:
     """The 'right' behavior: correct for real IDs, rejected for fake IDs."""
     if row["category"] in C.REAL_CATEGORIES:
@@ -27,6 +60,7 @@ def good_outcome(row) -> bool:
 
 def load(rd) -> pd.DataFrame:
     df = pd.read_csv(rd / "labels.csv")
+    df = apply_manual_overrides(df, rd)
     # A "fake" ID that has since been PUBLISHED in the CVE registry is no longer
     # a valid fake probe (the model can legitimately find real details for it).
     if "registry_state" in df.columns:
