@@ -1,7 +1,8 @@
-"""Compute RQ1-RQ4 from results/labels.csv -> printed tables + results/figures/.
+"""Compute RQ1-RQ4 from a run's labels.csv -> printed tables + its figures/.
 
 Rates with raw counts shown, per model, per the proposal's methodology.
-  python analysis/analyze.py
+  python analysis/analyze.py             # the CURRENT run
+  python analysis/analyze.py --run <id>  # an older run
 """
 from __future__ import annotations
 
@@ -24,8 +25,16 @@ def good_outcome(row) -> bool:
     return row["judge_label"] == "rejected"
 
 
-def load() -> pd.DataFrame:
-    df = pd.read_csv(C.RESULTS / "labels.csv")
+def load(rd) -> pd.DataFrame:
+    df = pd.read_csv(rd / "labels.csv")
+    # A "fake" ID that has since been PUBLISHED in the CVE registry is no longer
+    # a valid fake probe (the model can legitimately find real details for it).
+    if "registry_state" in df.columns:
+        broken = df["category"].isin(C.FAKE_CATEGORIES) & (df["registry_state"] == "PUBLISHED")
+        if broken.any():
+            ids = sorted(df.loc[broken, "id"].unique())
+            print(f"excluding {int(broken.sum())} rows from now-PUBLISHED fake ids: {ids}")
+            df = df[~broken]
     df["is_real"] = df["category"].isin(C.REAL_CATEGORIES)
     df["good"] = df.apply(good_outcome, axis=1)
     return df
@@ -117,7 +126,18 @@ def plot_rq2(pivot: pd.DataFrame):
 
 
 def main():
-    df = load()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--run", default=None,
+                    help="run id to analyze (default: the CURRENT run)")
+    a = ap.parse_args()
+    rd = C.resolve_run(a.run)
+    if rd is None:
+        sys.exit("no run found; pass --run <id> or start one with run_experiment.py")
+    print(f"run: {rd.name}")
+    # All figure/table outputs land inside the run directory.
+    C.FIGURES = rd / "figures"
+    df = load(rd)
     C.FIGURES.mkdir(parents=True, exist_ok=True)
 
     print("=" * 60, "\nRQ1 — Does the model search at the right times?")

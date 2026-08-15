@@ -76,13 +76,43 @@ def declined_shape(parsed: dict) -> bool:
                ("affected_products", "cvss_score", "severity", "mitigation"))
 
 
+def claimed_details(parsed: dict) -> bool:
+    """Model asserted SUBSTANTIVE vulnerability details: a CVSS score, a severity,
+    or affected products. A mitigation/notes sentence alone does NOT count -- a
+    model can legitimately reject a fake ID and still write 'verify the identifier'
+    as mitigation, which should not read as a fabricated claim."""
+    if not parsed:
+        return False
+    return any(parsed.get(k) for k in ("affected_products", "cvss_score", "severity"))
+
+
 def derive_signals(record: dict, gt: dict) -> dict:
     """All deterministic facts for one raw record."""
     parsed = record.get("parsed")
+    text = record.get("answer_text") or ""
     return {
         "id_exists": bool(gt.get("exists")),
-        "searched": bool(record.get("searched")),
+        "registry_state": gt.get("registry_state"),
+        # The model claimed the ID is reserved / not yet published. For fake IDs
+        # that are RESERVED in the MITRE registry this claim is accurate and must
+        # count as a rejection, never as fabrication.
+        "claimed_reserved": bool(re.search(
+            r"\breserv|\bnot\s+(?:yet\s+|currently\s+)?publish", text, re.IGNORECASE)),
+        # Recomputed from the billing-backed signals rather than trusting the
+        # raw line's searched flag: early interactions records also counted
+        # url_citation annotations, which models emit from memory even with no
+        # search tool attached. Falls back to the stored flag for legacy
+        # generateContent records that lack the step fields.
+        "searched": (bool(record.get("n_search_calls") or record.get("grounding_tool_count"))
+                     if "n_search_calls" in record else bool(record.get("searched"))),
+        # Per-signal evidence so their agreement can be audited: explicit
+        # google_search_call steps, the billed grounding_tool_count, and
+        # url_citation annotations (descriptive only -- NOT search evidence).
+        "searched_via_steps": bool(record.get("n_search_calls")),
+        "searched_via_tool_count": bool(record.get("grounding_tool_count")),
+        "searched_via_citations": bool(record.get("grounding_chunks")),
         "declined_shape": declined_shape(parsed),
+        "claimed_details": claimed_details(parsed),
         "cvss_match": cvss_signal(parsed, gt),
         "severity_match": severity_signal(parsed, gt),
         "product_match": product_signal(parsed, gt),

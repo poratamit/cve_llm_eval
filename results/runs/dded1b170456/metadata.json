@@ -1,0 +1,25 @@
+{
+  "run_id": "dded1b170456",
+  "created": "2026-08-15T08:28:30Z",
+  "git_branch": "interactions-api",
+  "git_commit": "70ccabb",
+  "api": "interactions",
+  "models": [
+    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash"
+  ],
+  "conditions": [
+    "off",
+    "on"
+  ],
+  "repeats": 3,
+  "judge_model": "gemini-3.7-flash",
+  "dataset": "dataset/dataset.json",
+  "note": "full sweep, interactions api, judge 3.7-flash; on-condition for 3.1-flash-lite deferred to next quota day",
+  "dry_run": false,
+  "scope_decisions": [
+    "2026-08-15: RQ4 (thinking-level sweep) dropped for budget; all 3 models kept for RQ1-RQ3",
+    "2026-08-15: gemini-3.1-flash-lite search-ON condition dropped for budget (grounding fees); its search-off data stays. On-condition models: 3.5-flash-lite, 3.5-flash."
+  ]
+}
